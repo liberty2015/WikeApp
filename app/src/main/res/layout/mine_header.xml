@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="200dp">
+    <ImageView
+        android:id="@+id/user_cover"
+        android:src="@drawable/background"
+        android:scaleType="centerCrop"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/headerImg"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:src="@mipmap/ic_wike_logo"
+            android:layout_marginRight="10dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp" />
+
+        <TextView
+            android:id="@+id/userName"
+            android:text="Liberty"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:shadowColor="#454545"
+            android:shadowDx="10"
+            android:shadowDy="10"
+            android:layout_marginRight="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/headerImg"
+            android:layout_toEndOf="@+id/headerImg" />
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/gender"
+            app:srcCompat="@drawable/ic_malehead"
+            android:layout_alignTop="@id/userName"
+            android:layout_toRightOf="@id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/userJob"
+            android:layout_toRightOf="@id/headerImg"
+            android:text="Android 工程师"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:shadowColor="#454545"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:layout_below="@id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/userDescription"
+            android:layout_below="@id/headerImg"
+            android:text="Android 工程师"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:shadowColor="#454545"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:layout_toRightOf="@id/headerImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+</FrameLayout>

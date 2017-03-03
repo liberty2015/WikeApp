@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="35dp"
+    android:gravity="center_vertical">
+    <!--<View-->
+    <!--android:layout_marginLeft="60dp"-->
+    <!--android:layout_marginRight="20dp"-->
+    <!--android:layout_width="1dp"-->
+    <!--android:background="@color/tintColor"-->
+    <!--android:layout_height="match_parent"/>-->
+    <com.liberty.wikepro.view.widget.HistoryListItemView
+        android:id="@+id/listPoint"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="10dp"
+        android:layout_width="25dp"
+        app:pointRadius="5dp"
+        app:hasPoint="true"
+        app:pointColor="@color/tintColor"
+        android:layout_height="match_parent" />
+    <TextView
+        android:id="@+id/chapter_name"
+        android:text="android"
+        android:textSize="20sp"
+        android:textColor="@android:color/black"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:layout_marginRight="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</LinearLayout>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="30dp">
+    <!--<View-->
+        <!--android:layout_marginLeft="15dp"-->
+        <!--android:layout_width="1dp"-->
+        <!--android:background="@color/tintColor"-->
+        <!--android:layout_height="match_parent"/>-->
+    <!--<View-->
+        <!--android:id="@+id/circlePoint"-->
+        <!--android:background="@drawable/circle"-->
+        <!--android:layout_marginLeft="7.5dp"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_width="15dp"-->
+        <!--android:layout_height="15dp"/>-->
+    <com.liberty.wikepro.view.widget.HistoryListItemView
+        android:id="@+id/circlePoint"
+        android:layout_width="25dp"
+        app:pointRadius="8dp"
+        app:hasPoint="true"
+        app:pointColor="@color/colorAccent"
+        android:layout_height="match_parent" />
+    <TextView
+        android:id="@+id/timeHead"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/circlePoint"
+        android:text="2016年12月20日"
+        android:textStyle="bold"
+        android:textSize="17sp"
+        android:textColor="@color/colorAccent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</RelativeLayout>

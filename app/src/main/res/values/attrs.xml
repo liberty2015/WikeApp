@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="NavBtn">
+        <attr name="navBtnDrawable" format="reference"/>
+        <attr name="navBtnTxt" format="string"/>
+        <attr name="tintColor" format="reference"/>
+        <attr name="isSelect" format="boolean"/>
+    </declare-styleable>
+    <declare-styleable name="HistoryListItemView">
+        <attr name="hasPoint" format="boolean"/>
+        <attr name="pointColor" format="color|reference"/>
+        <attr name="pointRadius" format="dimension|reference"/>
+        <attr name="lineColor" format="color|reference"/>
+        <attr name="lineWidth" format="dimension|reference"/>
+    </declare-styleable>
+</resources>

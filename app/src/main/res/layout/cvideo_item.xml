@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="35dp"
+    android:gravity="center_vertical">
+    <!--<View-->
+        <!--android:layout_marginLeft="60dp"-->
+        <!--android:layout_marginRight="20dp"-->
+        <!--android:layout_width="1dp"-->
+        <!--android:background="@color/tintColor"-->
+        <!--android:layout_height="match_parent"/>-->
+    <com.liberty.wikepro.view.widget.HistoryListItemView
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="20dp"
+        android:layout_width="25dp"
+        app:pointRadius="7dp"
+        app:hasPoint="false"
+        android:layout_height="match_parent" />
+    <android.support.v7.widget.AppCompatImageView
+        app:srcCompat="@drawable/ic_play_ico"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/video_name"
+        android:layout_marginLeft="5dp"
+        android:text="android"
+        android:textSize="16sp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:layout_marginRight="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</LinearLayout>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:background="@drawable/item_bg"
+    android:layout_width="match_parent"
+    android:layout_height="60dp">
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/itemImg"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        app:srcCompat="@drawable/ic_person"
+        android:layout_width="30dp"
+        android:layout_height="30dp" />
+    <TextView
+        android:id="@+id/itemName"
+        android:layout_toRightOf="@id/itemImg"
+        android:text="个人信息"
+        android:textSize="15sp"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <android.support.v7.widget.AppCompatImageView
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        app:srcCompat="@drawable/ic_angle"
+        android:tint="@color/tintColor"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp" />
+
+</RelativeLayout>

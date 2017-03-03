@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/background" android:gravity="clip_horizontal"/>
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="270"
+                android:startColor="#c04b80c7"
+                android:endColor="#c02e4d76"/>
+        </shape>
+    </item>
+</layer-list>

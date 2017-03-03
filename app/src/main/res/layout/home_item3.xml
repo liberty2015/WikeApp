@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/courseCover"
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+        android:layout_marginRight="20dp"/>
+    <TextView
+        android:id="@+id/courseTitle"
+        android:textSize="20sp"
+        android:layout_toRightOf="@id/courseCover"
+        android:text="@string/app_name"
+        android:textColor="@android:color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/courseDescription"
+        android:layout_toRightOf="@id/courseCover"
+        android:layout_marginTop="10dp"
+        android:maxLines="2"
+        android:text="fsdafdfafdasfdfsdafdfdsafdfdasfdsafafsafdsafsfsafasfafsafsafsafasfdsafsafa"
+        android:ellipsize="end"
+        android:layout_below="@id/courseTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/courseCount"
+        android:layout_below="@id/courseDescription"
+        android:layout_toRightOf="@id/courseCover"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</RelativeLayout>
