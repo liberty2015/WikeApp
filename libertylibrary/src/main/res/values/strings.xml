@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">LibertyLibrary</string>
+    <string name="loading_txt">加载中&#8230;</string>
+    <string name="error_no_data">没有数据！</string>
+
+    <string name="error_no_network">没有可用的网络</string>
+    <string name="error_no_content">内容加载失败\r\n点击重新加载</string>
+
+    <string name="info">消息</string>
+
+    <string-array name="main_arr">
+        <item>首页</item>
+        <item>课程</item>
+        <item>我的</item>
+    </string-array>
+</resources>

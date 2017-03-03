@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f6f6f6"
+    android:gravity="center">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <!--<ProgressBar-->
+            <!--android:id="@+id/loading"-->
+            <!--style="@style/Base.Widget.AppCompat.ProgressBar"-->
+            <!--android:layout_width="30dp"-->
+            <!--android:layout_height="30dp" />-->
+        <com.liberty.libertylibrary.widget.LoadingView
+            android:id="@+id/loading"
+            app:showingView="@mipmap/ic_wike_logo"
+            android:layout_width="60dp"
+            android:layout_height="60dp" />
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/fail_img"
+            app:srcCompat="@drawable/ic_fail"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/loading_txt"
+        android:textColor="#666666"
+        android:textSize="20sp"
+        android:text="@string/loading_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</LinearLayout>
