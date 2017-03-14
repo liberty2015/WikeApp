@@ -17,6 +17,11 @@ import android.widget.Toast;
 
 import com.liberty.libertylibrary.util.MyLogger;
 import com.liberty.wikepro.R;
+import com.liberty.wikepro.WikeApplication;
+import com.liberty.wikepro.component.ApplicationComponent;
+import com.liberty.wikepro.util.NetChangeObserver;
+import com.liberty.wikepro.util.NetStateReceiver;
+import com.liberty.wikepro.util.NetUtils;
 import com.liberty.wikepro.util.StatusBarCompat;
 import com.liberty.wikepro.view.widget.ProgressDialog;
 
@@ -41,7 +46,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected int statusBarColor=0;
 
-    private MyLogger logger=MyLogger.getLogger(BaseActivity.class);
+    protected MyLogger logger=MyLogger.getLogger(BaseActivity.class);
+
+    protected NetChangeObserver mNetChangeObserver;
 
     /**
      * 加载对话框
@@ -69,6 +76,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         mUnbinder= ButterKnife.bind(this);
         mCommonToolbar= ButterKnife.findById(this, R.id.toolBar);
         logger.d("toolbar==null"+(mCommonToolbar==null));
+        setActivityComponent(WikeApplication.getInstance().mAppComponent);
         initData();
         initViews();
         if (mCommonToolbar!=null){
@@ -76,6 +84,17 @@ public abstract class BaseActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             initToolbar();
         }
+        mNetChangeObserver=new NetChangeObserver() {
+            @Override
+            public void onNetConnected(NetUtils.NetType type) {
+                onNetworkConnected(type);
+            }
+
+            @Override
+            public void onNetDisconnect() {
+                onNetworkDisconnected();
+            }
+        };
 
     }
 
@@ -91,6 +110,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         mUnbinder.unbind();
+        NetStateReceiver.removeRegisterObserver(mNetChangeObserver);
     }
 
     protected abstract void initToolbar();
@@ -150,4 +170,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     public View f(@IdRes int id){
         return findViewById(id);
     }
+
+    protected void setActivityComponent(ApplicationComponent component){
+
+    }
+
+    protected void onNetworkConnected(NetUtils.NetType netType){}
+
+    protected void onNetworkDisconnected(){}
+
 }

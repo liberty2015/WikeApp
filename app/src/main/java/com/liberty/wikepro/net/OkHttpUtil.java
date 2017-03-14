@@ -6,7 +6,6 @@ import android.support.v4.util.ArrayMap;
 
 import com.google.gson.Gson;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -52,7 +51,7 @@ public class OkHttpUtil {
     private Handler mDelivery;
     private Gson mGson;
 
-    private static OkHttpUtil instance;
+    private volatile static OkHttpUtil instance;
     private final static int CONNECTTIMEOUT=30;
     private final static int READTIMEOUT=20;
     private final static int WRITETIMEOUT=20;
@@ -77,10 +76,16 @@ public class OkHttpUtil {
         mGson=new Gson();
     }
 
+    /**
+     * DCL单例模式
+     * @return
+     */
     public static OkHttpUtil getInstance(){
         if (instance==null){
             synchronized (OkHttpUtil.class){
-                instance=new OkHttpUtil();
+                if (instance==null){
+                    instance=new OkHttpUtil();
+                }
             }
         }
         return instance;
@@ -91,22 +96,24 @@ public class OkHttpUtil {
                 .enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                impl.onError(e.toString());
+//                impl.onError(e.toString());
+                sendFailResultCallback(impl,e);
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                impl.onSuccess(response.body().string());
-                try {
-                    JSONObject jsonObject=new JSONObject(response.body().string());
-                    if (jsonObject.getBoolean("success")){
-                        impl.onAnalyseDataSuccess(response.body().string());
-                    }else {
-                        impl.onAnalyseDataError(response.body().string());
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+//                impl.onSuccess(response.body().string());
+//                try {
+//                    JSONObject jsonObject=new JSONObject(response.body().string());
+//                    if (jsonObject.getBoolean("success")){
+//                        impl.onAnalyseDataSuccess(response.body().string());
+//                    }else {
+//                        impl.onAnalyseDataError(response.body().string());
+//                    }
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+                sendSuccessResultCallback(impl,response);
             }
         });
     }
@@ -116,22 +123,12 @@ public class OkHttpUtil {
                 .enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                impl.onError(e.toString());
+                sendFailResultCallback(impl,e);
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                impl.onSuccess(response.body().string());
-                try {
-                    JSONObject jsonObject=new JSONObject(response.body().string());
-                    if (jsonObject.getBoolean("success")){
-                        impl.onAnalyseDataSuccess(response.body().string());
-                    }else {
-                        impl.onAnalyseDataError(response.body().string());
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                sendSuccessResultCallback(impl,response);
             }
         });
     }
@@ -141,20 +138,38 @@ public class OkHttpUtil {
                 .enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                impl.onError(e.toString());
+                sendFailResultCallback(impl,e);
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                impl.onSuccess(response.body().string());
+            public void onResponse(Call call, Response response){
+                sendSuccessResultCallback(impl,response);
+            }
+        });
+    }
+
+    private void sendFailResultCallback(final OkHttpResponseIMPL impl,final IOException e){
+        mDelivery.post(new Runnable() {
+            @Override
+            public void run() {
+                impl.onError(e.toString());
+            }
+        });
+    }
+
+    private void sendSuccessResultCallback(final OkHttpResponseIMPL impl,final Response response){
+        mDelivery.post(new Runnable() {
+            @Override
+            public void run() {
                 try {
+                    impl.onSuccess(response.body().string());
                     JSONObject jsonObject=new JSONObject(response.body().string());
                     if (jsonObject.getBoolean("success")){
                         impl.onAnalyseDataSuccess(response.body().string());
                     }else {
                         impl.onAnalyseDataError(response.body().string());
                     }
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -236,6 +251,9 @@ public class OkHttpUtil {
         ArrayMap<String,String> params=new ArrayMap<>();
 
         public RequestParams add(String key,String value){
+            if (value==null){
+                value="";
+            }
             params.put(key,value);
             return this;
         }

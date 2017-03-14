@@ -22,9 +22,13 @@ public class MyLogger {
 		lock = new ReentrantLock();
 	}
 
-	public static synchronized MyLogger getLogger(Class<?> key) {
+	public static MyLogger getLogger(Class<?> key) {
 		if (inst == null) {
-			inst = new MyLogger();
+			synchronized (MyLogger.class){
+				if (inst==null){
+					inst = new MyLogger();
+				}
+			}
 		}
 		return inst;
 	}
@@ -61,7 +65,7 @@ public class MyLogger {
 		String currentTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date());
 		String message = (functionName == null ? msg : (functionName + " - "
 				+ String.valueOf(threadId) + " - " + msg));
-        String finalRes = currentTime + " - " + message;
+		String finalRes = currentTime + " - " + message;
 		return finalRes;
 	}
 
@@ -98,23 +102,23 @@ public class MyLogger {
 	/**
 	 * log.d
 	 */
-    public void d(String format) {
-        Log.d(tagName,format);
-    }
+	public void d(String format) {
+		Log.d(tagName,format);
+	}
 
 	public void d(String format, Object... args) {
 		//Log.d(tagName,format);
-        String message = createMessage(getInputString(format, args));
-        Log.d(tagName, message);
-//		if (logLevel <= Log.DEBUG) {
-//			lock.lock();
-//			try {
-//				String message = createMessage(getInputString(format, args));
-//				Log.d(tagName, message);
-//			} finally {
-//				lock.unlock();
-//			}
-//		}
+//		String message = createMessage(getInputString(format, args));
+//		Log.d(tagName, message);
+		if (logLevel <= Log.DEBUG) {
+			lock.lock();
+			try {
+				String message = createMessage(getInputString(format, args));
+				Log.d(tagName, message);
+			} finally {
+				lock.unlock();
+			}
+		}
 	}
 
 	/**

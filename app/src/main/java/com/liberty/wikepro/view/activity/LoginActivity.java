@@ -19,6 +19,8 @@ import android.widget.RelativeLayout;
 import com.liberty.wikepro.MainActivity;
 import com.liberty.wikepro.R;
 import com.liberty.wikepro.base.BaseActivity;
+import com.liberty.wikepro.component.ApplicationComponent;
+import com.liberty.wikepro.component.DaggerLoginComponent;
 import com.liberty.wikepro.contact.LoginContact;
 import com.liberty.wikepro.model.bean.Student;
 import com.liberty.wikepro.presenter.LoginPresenter;
@@ -61,6 +63,8 @@ public class LoginActivity extends BaseActivity implements LoginContact.View{
 
     //1:male,2:female
     int gender=0;
+
+    private Student student;
 
     ValueAnimator goAnim,loginAnim,registerAnim,registerBoxAnim;
     private boolean isReverse=false;
@@ -111,7 +115,15 @@ public class LoginActivity extends BaseActivity implements LoginContact.View{
 
     @Override
     protected void initData() {
+        loginPresenter.attachView(this);
+    }
 
+    @Override
+    protected void setActivityComponent(ApplicationComponent component) {
+        DaggerLoginComponent.builder()
+                .applicationComponent(component)
+                .build()
+                .inject(this);
     }
 
     @OnClick({
@@ -166,7 +178,9 @@ public class LoginActivity extends BaseActivity implements LoginContact.View{
             }
             break;
             case R.id.registerBtn:{
-                Student student=new Student();
+                if (student==null){
+                    student=new Student();
+                }
                 if (!isNext){
                     String loginName=loginNameRegister.getText().toString();
                     if (TextUtils.isEmpty(loginName)){
@@ -204,6 +218,7 @@ public class LoginActivity extends BaseActivity implements LoginContact.View{
                     ((AppCompatButton)findViewById(R.id.registerBtn)).setText("注册");
                 }else {
                     String name=nameRegister.getText().toString();
+                    Log.d("xxxxxx","name="+name);
                     if (TextUtils.isEmpty(name)){
                         nameRegister.setError("姓名不能为空！");
                         return;
@@ -216,6 +231,7 @@ public class LoginActivity extends BaseActivity implements LoginContact.View{
                     }else {
                         student.setGender(gender);
                     }
+                    showDialog();
                     switch (isPhone){
                         case 0:{
                             loginPresenter.registerByPhone(student);
@@ -396,6 +412,6 @@ public class LoginActivity extends BaseActivity implements LoginContact.View{
 
     @Override
     public void complete() {
-
+        hideDialog();
     }
 }

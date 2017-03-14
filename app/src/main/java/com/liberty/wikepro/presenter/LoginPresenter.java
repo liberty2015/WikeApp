@@ -9,16 +9,19 @@ import com.liberty.wikepro.net.OkHttpUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.inject.Inject;
+
 /**
  * Created by LinJinFeng on 2017/2/13.
  */
 
 public class LoginPresenter extends BasePresenter<LoginContact.View> implements LoginContact.Presenter {
 
+    @Inject
     LoginModel loginModel;
 
+    @Inject
     public LoginPresenter(){
-        loginModel=new LoginModel();
     }
 
     @Override
@@ -80,7 +83,7 @@ public class LoginPresenter extends BasePresenter<LoginContact.View> implements 
         loginModel.registerByEmail(student, new OkHttpUtil.OkHttpResponseIMPL() {
             @Override
             public void onSuccess(String result) {
-
+                mView.complete();
             }
 
             @Override

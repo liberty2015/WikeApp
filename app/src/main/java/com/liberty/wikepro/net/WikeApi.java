@@ -1,5 +1,7 @@
 package com.liberty.wikepro.net;
 
+import com.liberty.wikepro.BuildConfig;
+
 /**
  * Created by LinJinFeng on 2017/2/16.
  */
@@ -10,15 +12,15 @@ public class WikeApi {
 
     private boolean hasPort=false;
 
-    private final String base_url="http://10.0.2.2/wike/index.php";
+    private final String base_url= BuildConfig.serverUrl+BuildConfig.appUrl;
 
     private final String port=":";
 
     private final String login_url="";
 
-    private final String registerByPhone_url="/Home/User/registerByPhone";
+    private static final String registerByPhone_url="/Home/User/registerByPhone";
 
-    private final String registerByEmail_url="/Home/User/registerByEmail";
+    private static final String registerByEmail_url="/Home/User/registerByEmail";
 
     public static WikeApi getInstance(){
         if (instance==null){

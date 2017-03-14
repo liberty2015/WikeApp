@@ -20,12 +20,14 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField "String","Test_Id",'"123"'
+            buildConfigField "String","serverUrl",'"http://172.18.91.1:8011"'
+            buildConfigField "String","appUrl",'"/WikeServer"'
         }
         debug{
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'),'proguard-rules.pro'
-            buildConfigField "String","Test_Id",'"1234"'
+            buildConfigField "String","serverUrl",'"http://172.18.91.1:8011"'
+            buildConfigField "String","appUrl",'"/WikeServer"'
         }
     }
 }
