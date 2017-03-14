@@ -19,6 +19,10 @@ public class Course extends BaseBean implements itemType{
     private String describtion;
     private String pdev;
     private int spanCount;
+    private int homeType;
+
+    public static final int RECOMMAND=0x11;
+    public static final int NEW=0x12;
 
     public Course(){
 
@@ -36,6 +40,18 @@ public class Course extends BaseBean implements itemType{
         describtion=in.readString();
         pdev=in.readString();
         spanCount=in.readInt();
+    }
+
+    public void setNEW() {
+        this.homeType = NEW;
+    }
+
+    public void setRECOMMAND() {
+        this.homeType = RECOMMAND;
+    }
+
+    public int getHomeType() {
+        return homeType;
     }
 
     public void setId(int id) {

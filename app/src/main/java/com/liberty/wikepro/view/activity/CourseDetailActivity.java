@@ -1,9 +1,13 @@
 package com.liberty.wikepro.view.activity;
 
+import android.annotation.TargetApi;
 import android.graphics.Color;
+import android.os.Build;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +24,7 @@ import com.liberty.wikepro.model.bean.itemType;
 import com.liberty.wikepro.util.ImageUtil;
 import com.liberty.wikepro.util.StatusBarCompat;
 import com.liberty.wikepro.view.widget.adapter.ChapterVideoAdapter;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,6 +102,57 @@ public class CourseDetailActivity extends BaseRVActivity<CourseContact.Presenter
                 startOtherActivity(CourseVideoActivity.class);
             }
         });
+        Picasso.with(this).load("http://pic.uuhy.com/uploads/2011/10/15/Macro-Photos15.jpg").into((ImageView) findViewById(R.id.cover));
+        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
+            collapsingToolbarLayout.setTransitionGroup(false);
+            getWindow().setSharedElementEnterTransition(
+                    initSharedTransition());
+            getWindow().setSharedElementReturnTransition(TransitionInflater.from(this).inflateTransition(R.transition.changebounds_arc));
+            getWindow().setEnterTransition(initContentTransition());
+            getWindow().setReturnTransition(TransitionInflater.from(this).inflateTransition(R.transition.return_slide));
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    private Transition initSharedTransition(){
+        Transition transition=TransitionInflater.from(this).inflateTransition(R.transition.changebounds_arc);
+        return transition;
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    private Transition initContentTransition(){
+        Transition transition=TransitionInflater.from(this).inflateTransition(R.transition.slide);
+        transition.addListener(new Transition.TransitionListener() {
+            @Override
+            public void onTransitionStart(Transition transition) {
+
+            }
+
+            @Override
+            public void onTransitionEnd(Transition transition) {
+                transition.removeListener(this);
+                startStudy.animate()
+                        .scaleX(1)
+                        .scaleY(1)
+                        .start();
+            }
+
+            @Override
+            public void onTransitionCancel(Transition transition) {
+
+            }
+
+            @Override
+            public void onTransitionPause(Transition transition) {
+
+            }
+
+            @Override
+            public void onTransitionResume(Transition transition) {
+
+            }
+        });
+        return transition;
     }
 
     private void initTestData(){
@@ -120,5 +176,11 @@ public class CourseDetailActivity extends BaseRVActivity<CourseContact.Presenter
     @Override
     public void onLoadMore() {
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

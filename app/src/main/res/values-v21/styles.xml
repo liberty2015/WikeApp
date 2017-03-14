@@ -5,6 +5,10 @@
         <!--<item name="android:windowTranslucentNavigation">true</item>-->
         <!--Android 5.x开始需要把颜色设置透明，否则导航栏会呈现系统默认的浅灰色-->
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+        <item name="android:windowActivityTransitions">true</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">false</item>
+        <item name="android:windowAllowReturnTransitionOverlap">false</item>
     </style>
     <style name="TranslucentTheme" parent="BaseTheme">
         <item name="android:windowTranslucentStatus">true</item>

@@ -8,11 +8,9 @@ import android.widget.TextView;
 
 import com.liberty.libertylibrary.adapter.base.BaseHolder;
 import com.liberty.libertylibrary.adapter.base.BaseRecyclerAdapter;
-import com.liberty.libertylibrary.widget.NestListView.NestFullListView;
 import com.liberty.wikepro.R;
 import com.liberty.wikepro.model.bean.Catalog;
 import com.liberty.wikepro.model.bean.Course;
-import com.liberty.wikepro.model.bean.CourseList;
 import com.liberty.wikepro.model.bean.itemType;
 import com.liberty.wikepro.util.ImageUtil;
 
@@ -47,12 +45,17 @@ public class HomePageAdapter extends BaseRecyclerAdapter<itemType> {
                 };
             }
             case NORMAL_LIST:{
-                return new BaseHolder<CourseList>(viewGroup,R.layout.home_item_2) {
+                return new BaseHolder<Course>(viewGroup,R.layout.home_item3) {
                     @Override
-                    public void setData(CourseList item) {
+                    public void setData(Course item) {
                         super.setData(item);
-                        NestFullListView listView=getView(R.id.listView);
-                        listView.setAdpter(new HomePageNestAdapter(getmContext(),item.getCourses()));
+//                        NestFullListView listView=getView(R.id.listView);
+//                        listView.setAdpter(new HomePageNestAdapter(getmContext(),item.getCourses()));
+                        ImageView coverImg=getView(R.id.cover);
+                        ImageUtil.getCircleImageIntoImageView(getmContext(),coverImg,item.getPdev(),false);
+                        ((TextView)getView(R.id.courseTitle)).setText(item.getCname());
+                        ((TextView)getView(R.id.courseDescription)).setText(item.getDescribtion());
+                        ((TextView)getView(R.id.courseCount)).setText(Integer.toString(item.getCount()));
                     }
                 };
             }
@@ -76,10 +79,16 @@ public class HomePageAdapter extends BaseRecyclerAdapter<itemType> {
         if (item instanceof Catalog){
             return TYPE_NEW;
         }else if (item instanceof Course){
-            return NORMAL;
-        }else if (item instanceof CourseList){
-            return NORMAL_LIST;
+            Course course= (Course) item;
+            if (course.getSpanCount()==1){
+                return NORMAL;
+            }else if (course.getSpanCount()==2){
+                return NORMAL_LIST;
+            }
         }
+//        else if (item instanceof CourseList){
+//            return NORMAL_LIST;
+//        }
         return super.getViewType(position);
     }
 
@@ -98,8 +107,13 @@ public class HomePageAdapter extends BaseRecyclerAdapter<itemType> {
             if (count==1){
                 int size=getHeaderCount();
                 itemType type=getItem(size>0?position-size:position);
-                if (type instanceof Catalog||type instanceof CourseList){
+                if (type instanceof Catalog){
                     count=maxCount;
+                }else if (type instanceof Course){
+                    Course c= (Course) type;
+                    if (c.getSpanCount()==maxCount){
+                        count=maxCount;
+                    }
                 }
             }
             return count;
