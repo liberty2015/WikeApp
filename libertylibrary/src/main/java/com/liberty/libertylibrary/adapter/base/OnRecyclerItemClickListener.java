@@ -74,7 +74,18 @@ public abstract class OnRecyclerItemClickListener implements RecyclerView.OnItem
             if (child!=null){
                 RecyclerView.ViewHolder holder=recyclerView.getChildViewHolder(child);
                 int position=holder.getAdapterPosition();
-                onItemClick(position,holder);
+                RecyclerView.Adapter adapter=recyclerView.getAdapter();
+                if (adapter instanceof BaseRecyclerAdapter){
+                    if (((BaseRecyclerAdapter) adapter).getHeaderCount()>0){
+                        if (!((BaseRecyclerAdapter) adapter).isHeader(position)){
+                            onItemClick(position-((BaseRecyclerAdapter) adapter).getHeaderCount(),holder);
+                        }
+                    }else {
+                        onItemClick(position,holder);
+                    }
+                }else {
+                    onItemClick(position,holder);
+                }
             }
             return true;
         }

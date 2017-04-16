@@ -1,5 +1,7 @@
 package com.liberty.wikepro.component;
 
+import android.content.Context;
+
 import com.liberty.wikepro.module.ApplicationModule;
 
 import dagger.Component;
@@ -13,4 +15,5 @@ import dagger.Component;
 )
 public interface ApplicationComponent {
 
+    Context getContext();
 }

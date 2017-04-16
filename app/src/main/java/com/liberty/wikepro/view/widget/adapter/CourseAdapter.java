@@ -9,6 +9,7 @@ import com.liberty.libertylibrary.adapter.base.BaseHolder;
 import com.liberty.libertylibrary.adapter.base.BaseRecyclerAdapter;
 import com.liberty.wikepro.R;
 import com.liberty.wikepro.model.bean.Course;
+import com.liberty.wikepro.net.WikeApi;
 import com.liberty.wikepro.util.ImageUtil;
 
 /**
@@ -28,7 +29,7 @@ public class CourseAdapter extends BaseRecyclerAdapter<Course> {
                 super.setData(item);
                 ImageUtil.getCircleImageIntoImageView(getmContext(),
                         (ImageView) getView(R.id.courseCover),
-                        item.getPdev(),false);
+                        WikeApi.getInstance().getImageUrl(item.getPdev()),false);
                 ((TextView)getView(R.id.courseTitle)).setText(item.getCname());
                 ((TextView)getView(R.id.stu_num)).setText(Integer.toString(item.getUnum()));
             }

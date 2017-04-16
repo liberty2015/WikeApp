@@ -7,5 +7,6 @@
     <string name="middle">中等</string>
     <string name="hard">困难</string>
     <string name="test">本次课程讲师仿京东商城搭建好了一个电商平台，将以此为基础，使用Yii2.0高级组件深度优化前后台各个模块，并对搭配MySQL数据库的整体项目架构进行扩展及性能优化，让你不仅能掌握Yii2.0的高级技术，更能学会从整个架构的角度把握整个项目</string>
-
+    <string name="blog">个人博客：<a href="http://www.cnblogs.com/libertycode/">http://www.cnblogs.com/libertycode/</a></string>
+    <string name="github">Github地址：<a href="https://github.com/liberty2015">https://github.com/liberty2015</a></string>
 </resources>

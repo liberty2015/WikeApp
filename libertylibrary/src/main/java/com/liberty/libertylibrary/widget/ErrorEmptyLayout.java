@@ -23,12 +23,12 @@ public class ErrorEmptyLayout extends LinearLayout implements View.OnClickListen
     private ImageView mErrorImg;
     private LoadingView mProgress;
     private TextView mTextView;
-    private int errorState;
     public static final int HIDE_LAYOUT=4;
     public static final int NETWORK_ERROR=1;
     public static final int NETWORK_LOADING=2;
     public static final int NO_DATA=3;
     public static final int SHOW_LAYOUT=5;
+    private int errorState;
     private Animation fade_in,fade_out;
     private onLayoutClickListener listener;
 
@@ -36,6 +36,7 @@ public class ErrorEmptyLayout extends LinearLayout implements View.OnClickListen
     public ErrorEmptyLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext=context;
+        errorState=NETWORK_LOADING;
         initView();
     }
 

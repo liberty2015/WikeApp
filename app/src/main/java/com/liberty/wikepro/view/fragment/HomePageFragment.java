@@ -2,6 +2,7 @@ package com.liberty.wikepro.view.fragment;
 
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -20,18 +21,24 @@ import com.liberty.libertylibrary.adapter.base.OnRecyclerItemClickListener;
 import com.liberty.libertylibrary.adapter.divider.MarginDecoration;
 import com.liberty.libertylibrary.widget.Banner;
 import com.liberty.libertylibrary.widget.BannerContainer;
+import com.liberty.libertylibrary.widget.BannerViewPager;
 import com.liberty.libertylibrary.widget.ErrorEmptyLayout;
 import com.liberty.wikepro.R;
+import com.liberty.wikepro.WikeApplication;
 import com.liberty.wikepro.base.BaseRVFragment;
+import com.liberty.wikepro.component.ApplicationComponent;
+import com.liberty.wikepro.component.DaggerMainComponent;
 import com.liberty.wikepro.contact.HomeContact;
-import com.liberty.wikepro.model.bean.Catalog;
 import com.liberty.wikepro.model.bean.Course;
 import com.liberty.wikepro.model.bean.itemType;
+import com.liberty.wikepro.presenter.HomePresenter;
 import com.liberty.wikepro.view.activity.CourseDetailActivity;
+import com.liberty.wikepro.view.activity.CourseVideoActivity;
 import com.liberty.wikepro.view.widget.adapter.HomePageAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,6 +48,9 @@ public class HomePageFragment extends BaseRVFragment<HomeContact.Presenter,itemT
 
     private BannerContainer bannerContainer;
 
+    @Inject
+    HomePresenter homePresenter;
+
     @Override
     protected int getLayoutResId() {
         return R.layout.common_list_fragment_layout;
@@ -48,6 +58,7 @@ public class HomePageFragment extends BaseRVFragment<HomeContact.Presenter,itemT
 
     @Override
     protected void initData() {
+        homePresenter.attachView(this);
         final HomePageAdapter adapter=new HomePageAdapter(getHoldActivity());
         GridLayoutManager gridLayoutManager=new GridLayoutManager(getHoldActivity(),2);
         HomePageAdapter.MultiSpan gridHeaderSpan = adapter.obtainGridHeaderSpan(2);
@@ -56,24 +67,38 @@ public class HomePageFragment extends BaseRVFragment<HomeContact.Presenter,itemT
             @Override
             public void onItemClick(int position, RecyclerView.ViewHolder holder) {
                 super.onItemClick(position, holder);
-                itemType item = adapter.getItem(position-1);
+                itemType item = adapter.getItem(position);
                 if (item instanceof Course){
                     Course course= (Course) item;
                     if (course.getSpanCount()==2){
-                        ImageView cover= (ImageView) ((BaseHolder)holder).getView(R.id.cover);
-                        Intent intent=new Intent(getHoldActivity(), CourseDetailActivity.class);
-                        Bundle option = ActivityOptionsCompat.makeSceneTransitionAnimation(getHoldActivity(), cover, "shared_img").toBundle();
-                        ActivityCompat.startActivity(getHoldActivity(),intent,option);
+                        if (course.getHasStudy()==0){
+                            ImageView cover= (ImageView) ((BaseHolder)holder).getView(R.id.cover);
+                            Intent intent=new Intent(getHoldActivity(), CourseDetailActivity.class);
+                            Bundle option = ActivityOptionsCompat.makeSceneTransitionAnimation(getHoldActivity(), cover, "shared_img").toBundle();
+                            intent.putExtra("course",course);
+                            ActivityCompat.startActivity(getHoldActivity(),intent,option);
+                        }else if (course.getHasStudy()==1){
+                            Intent intent=new Intent(getHoldActivity(), CourseVideoActivity.class);
+                            intent.putExtra("course",course);
+                            startActivity(intent);
+                        }
                     }else if (course.getSpanCount()==1){
-                        ImageView cover= (ImageView) ((BaseHolder)holder).getView(R.id.courseCover);
-                        Intent intent=new Intent(getHoldActivity(), CourseDetailActivity.class);
-                        Bundle option = ActivityOptionsCompat.makeSceneTransitionAnimation(getHoldActivity(), cover, "shared_img").toBundle();
-                        ActivityCompat.startActivity(getHoldActivity(),intent,option);
+                        if (course.getHasStudy()==0) {
+                            ImageView cover = (ImageView) ((BaseHolder) holder).getView(R.id.courseCover);
+                            Intent intent = new Intent(getHoldActivity(), CourseDetailActivity.class);
+                            Bundle option = ActivityOptionsCompat.makeSceneTransitionAnimation(getHoldActivity(), cover, "shared_img").toBundle();
+                            intent.putExtra("course", course);
+                            ActivityCompat.startActivity(getHoldActivity(), intent, option);
+                        }else if (course.getHasStudy()==1){
+                            Intent intent=new Intent(getHoldActivity(), CourseVideoActivity.class);
+                            intent.putExtra("course",course);
+                            startActivity(intent);
+                        }
                     }
                 }
 
             }
-        },true,true,gridLayoutManager);
+        },true,false,gridLayoutManager);
         mAdapter.addHeader(new BaseRecyclerAdapter.ItemView() {
             @Override
             public View onCreateView(ViewGroup viewGroup) {
@@ -83,44 +108,26 @@ public class HomePageFragment extends BaseRVFragment<HomeContact.Presenter,itemT
             @Override
             public void onBindView(View headerView) {
                 bannerContainer= (BannerContainer) headerView.findViewById(R.id.bannerContainer);
+                bannerContainer.setBannerItemClick(new BannerViewPager.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(Banner banner, int position) {
+                        Intent intent=new Intent();
+                        intent.setAction("com.liberty.wikepro.VIEW");
+//                        intent.setAction(Intent.ACTION_VIEW);
+                        String url="wikeApp://wikeHost"+"/"+banner.getPhotos().get(position).getContentUrl();
+                        intent.setData(Uri.parse(url));
+                        startActivity(intent);
+                    }
+                });
             }
         });
         list.addItemDecoration(new MarginDecoration(
                 (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,10,getResources().getDisplayMetrics()),gridHeaderSpan));
         complete();
-        initTestData();
-    }
+//        initTestData();
+        homePresenter.getCourseList(WikeApplication.getInstance().getStudent());
+        homePresenter.getBanner();
 
-    private void initTestData(){
-        List<itemType> courseList=new ArrayList<>();
-        Catalog catalog=new Catalog();
-        catalog.setTitle("为您推荐");
-        catalog.setResId(R.drawable.ic_star);
-        courseList.add(catalog);
-        for (int i=0;i<8;i++){
-            Course course=new Course();
-            course.setCname("Java 入门");
-            course.setPdev("http://pic.uuhy.com/uploads/2011/10/15/Macro-Photos15.jpg");
-            course.setSpanCount(1);
-            courseList.add(course);
-
-        }
-        Catalog catalog1=new Catalog();
-        catalog1.setTitle("新课推荐");
-        catalog1.setResId(R.drawable.ic_up);
-        courseList.add(catalog1);
-//        CourseList courseList1=new CourseList();
-//        List<Course> courses=new ArrayList<>();
-        for (int i=0;i<8;i++){
-            Course course=new Course();
-            course.setCname("Android 入门");
-            course.setPdev("http://i-7.vcimg.com/crop/9809a42ef083af7a4d682334d91a2e7b373087(600x)/thumb.jpg");
-            course.setSpanCount(2);
-            courseList.add(course);
-        }
-//        courseList1.setCourses(courses);
-//        courseList.add(courseList1);
-        mAdapter.addAll(courseList);
     }
 
     @Override
@@ -129,7 +136,8 @@ public class HomePageFragment extends BaseRVFragment<HomeContact.Presenter,itemT
     }
 
     @Override
-    public void showCourseList(List<Course> courses) {
+    public void showCourseList(List<itemType> courses) {
+        mAdapter.clear();
         mAdapter.addAll(courses);
     }
 
@@ -146,5 +154,16 @@ public class HomePageFragment extends BaseRVFragment<HomeContact.Presenter,itemT
         if (refreshLayout.isRefreshing()) refreshLayout.setRefreshing(false);
     }
 
+    @Override
+    protected void setFragmentComponent(ApplicationComponent component) {
+        DaggerMainComponent.builder().applicationComponent(component)
+//                .applicationModule(new ApplicationModule(WikeApplication.getInstance()))
+                .build().inject(this);
+    }
 
+    @Override
+    public void onRefresh() {
+        super.onRefresh();
+        homePresenter.getCourseList(WikeApplication.getInstance().getStudent());
+    }
 }

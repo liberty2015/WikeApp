@@ -3,17 +3,21 @@ package com.liberty.wikepro.net;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.util.ArrayMap;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.FileNameMap;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -22,7 +26,6 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
-import okhttp3.Headers;
 import okhttp3.JavaNetCookieJar;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -52,9 +55,9 @@ public class OkHttpUtil {
     private Gson mGson;
 
     private volatile static OkHttpUtil instance;
-    private final static int CONNECTTIMEOUT=30;
-    private final static int READTIMEOUT=20;
-    private final static int WRITETIMEOUT=20;
+    private final static int CONNECTTIMEOUT=300;
+    private final static int READTIMEOUT=200;
+    private final static int WRITETIMEOUT=200;
 
     private OkHttpUtil(){
         CookieManager cookieManager=new CookieManager();
@@ -71,6 +74,7 @@ public class OkHttpUtil {
                  * 错误重连
                  */
                 .retryOnConnectionFailure(true)
+                .addInterceptor(new LogInterceptor("Wike",true))
                 .build();
         mDelivery=new Handler(Looper.getMainLooper());
         mGson=new Gson();
@@ -96,24 +100,12 @@ public class OkHttpUtil {
                 .enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-//                impl.onError(e.toString());
                 sendFailResultCallback(impl,e);
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-//                impl.onSuccess(response.body().string());
-//                try {
-//                    JSONObject jsonObject=new JSONObject(response.body().string());
-//                    if (jsonObject.getBoolean("success")){
-//                        impl.onAnalyseDataSuccess(response.body().string());
-//                    }else {
-//                        impl.onAnalyseDataError(response.body().string());
-//                    }
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-                sendSuccessResultCallback(impl,response);
+                sendSuccessResultCallback(impl,parseResponse(response));
             }
         });
     }
@@ -128,22 +120,27 @@ public class OkHttpUtil {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                sendSuccessResultCallback(impl,response);
+                sendSuccessResultCallback(impl,parseResponse(response));
             }
         });
     }
 
-    public void postFile(String url, File[] files, String[] keys, RequestParams params, final OkHttpResponseIMPL impl){
+    public void postFile(String url, File[] files, String[] keys, RequestParams params, final OkHttpResponseIMPL impl) throws UnsupportedEncodingException {
         mOkHttpClient.newCall(buildMultipartRequest(url, files, keys, params))
                 .enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
                 sendFailResultCallback(impl,e);
             }
 
             @Override
             public void onResponse(Call call, Response response){
-                sendSuccessResultCallback(impl,response);
+                try {
+                    sendSuccessResultCallback(impl,parseResponse(response));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -157,17 +154,35 @@ public class OkHttpUtil {
         });
     }
 
-    private void sendSuccessResultCallback(final OkHttpResponseIMPL impl,final Response response){
+    private String parseResponse(Response response) throws IOException {
+        return response.body().string();
+    }
+
+    private void sendSuccessResultCallback(final OkHttpResponseIMPL impl,final String result){
         mDelivery.post(new Runnable() {
             @Override
             public void run() {
                 try {
-                    impl.onSuccess(response.body().string());
-                    JSONObject jsonObject=new JSONObject(response.body().string());
+//                    String result=response1.body().string();
+                    Log.d("xxxxx","ResultCallback="+new String(result.getBytes("UTF-8"),"Utf-8"));
+                    impl.onSuccess(result);
+                    JSONObject jsonObject=new JSONObject(result);
                     if (jsonObject.getBoolean("success")){
-                        impl.onAnalyseDataSuccess(response.body().string());
+                        if (!jsonObject.isNull("data")){
+                            JSONObject dataJson=jsonObject.optJSONObject("data");
+                            if (dataJson!=null){
+                                impl.onAnalyseDataSuccess(dataJson.toString());
+                            }else {
+                                JSONArray dataJsonArr=jsonObject.optJSONArray("data");
+                                if (dataJsonArr!=null){
+                                    impl.onAnalyseDataSuccess(dataJsonArr.toString());
+                                }
+                            }
+                        }else {
+                            impl.onAnalyseDataSuccess(result);
+                        }
                     }else {
-                        impl.onAnalyseDataError(response.body().string());
+                        impl.onAnalyseDataError(result);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -176,7 +191,7 @@ public class OkHttpUtil {
         });
     }
 
-    private Request buildMultipartRequest(String url, File[] files,String[] keys,RequestParams params){
+    private Request buildMultipartRequest(String url, File[] files,String[] keys,RequestParams params) throws UnsupportedEncodingException {
         Request.Builder builder = new Request.Builder().url(url);
         MultipartBody.Builder builder1=new MultipartBody
                 .Builder();
@@ -185,6 +200,8 @@ public class OkHttpUtil {
             ArrayList<String> keys1 = params.getKeys();
             for (String key:keys1){
                 builder1.addFormDataPart(key,params.getValue(key));
+//                builder1.addPart(Headers.of("Content-Disposition","form-data;name=\""
+//                        +key+"\""),RequestBody.create(null,params.getValue(key)));
             }
         }
         if (files!=null&&files.length>0){
@@ -192,9 +209,11 @@ public class OkHttpUtil {
             for (int i=0;i<files.length;i++){
                 File file=files[i];
                 String fileName=file.getName();
-                fileBody=RequestBody.create(okhttp3.MediaType.parse(guessMimeType(fileName)),file);
-                builder1.addPart(Headers.of("Content-Disposition","form-data;name=\""
-                        +keys[i]+"\";filename=\""+fileName+"\""),fileBody);
+                okhttp3.MediaType mediaType= okhttp3.MediaType.parse("image/jpg");
+                fileBody=RequestBody.create(mediaType,file);
+//                builder1.addPart(Headers.of("Content-Disposition","form-data;name=\""
+//                        +keys[i]+"\";filename=\""+fileName+"\""),fileBody);
+                builder1.addFormDataPart(keys[i], URLEncoder.encode(fileName,"UTF-8"),fileBody);
             }
         }
         return builder.post(builder1.build()).build();
@@ -255,6 +274,11 @@ public class OkHttpUtil {
                 value="";
             }
             params.put(key,value);
+            return this;
+        }
+
+        public RequestParams add(String key,int value){
+            params.put(key,Integer.toString(value));
             return this;
         }
 

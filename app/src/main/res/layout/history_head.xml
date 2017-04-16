@@ -19,6 +19,7 @@
     <com.liberty.wikepro.view.widget.HistoryListItemView
         android:id="@+id/circlePoint"
         android:layout_width="25dp"
+        android:layout_marginLeft="20dp"
         app:pointRadius="8dp"
         app:hasPoint="true"
         app:pointColor="@color/colorAccent"

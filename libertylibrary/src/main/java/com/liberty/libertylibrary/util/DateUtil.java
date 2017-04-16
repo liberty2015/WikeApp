@@ -38,6 +38,25 @@ public class DateUtil {
         }
     }
 
+    public static int compareDateInOneDate(Date now,Date date){
+        long nowTimestamp=now.getTime();
+        Calendar calendar=Calendar.getInstance();
+        calendar.setTimeInMillis(nowTimestamp);
+        Calendar calendar1=Calendar.getInstance();
+        calendar1.set(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH)+1,calendar.get(Calendar.DATE));
+        long nowDate=calendar1.getTimeInMillis();
+        calendar.setTimeInMillis(date.getTime());
+        calendar1.set(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH)+1,calendar.get(Calendar.DATE));
+        long dateDate=calendar1.getTimeInMillis();
+        if (nowDate==dateDate){
+            return 0;
+        }else if (nowDate>dateDate){
+            return 1;
+        }else {
+            return 0;
+        }
+    }
+
     public static Date getToday(){
         Calendar calendar= Calendar.getInstance();
         calendar.setTime(new Date());
@@ -47,6 +66,11 @@ public class DateUtil {
         Calendar calendar1= Calendar.getInstance();
         calendar1.set(year,month,day);
         return calendar1.getTime();
+    }
+
+    public static Date getCurrentDate(){
+        long time=System.currentTimeMillis();
+        return new Date(time);
     }
 
     public static String DateToStr(Date date){

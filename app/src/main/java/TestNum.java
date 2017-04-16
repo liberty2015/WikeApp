@@ -1,3 +1,18 @@
+import com.liberty.wikepro.net.OkHttpUtil;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 /**
  * Created by LinJinFeng on 2017/2/16.
  */
@@ -121,8 +136,8 @@ public class TestNum {
 //            System.out.println(i);
 //        }
 //        System.out.println(new Integer(null));
-        System.out.println(test1());
-        System.out.println(label);
+//        System.out.println(test1());
+//        System.out.println(label);
 //        TestSum sn=new TestSum(0);
 //        TestClient t1=new TestClient(sn);
 //        TestClient t2=new TestClient(sn);
@@ -137,6 +152,54 @@ public class TestNum {
 //        for (int i:arr){
 //            System.out.print(i+"  ");
 //        }
+//        B b=new B();
+        File f=new File("F:\\install package\\scene.jpg");
+        OkHttpUtil.RequestParams params = new OkHttpUtil.RequestParams();
+        params.add("id","1");
+        String url="http://119.29.175.247/WikeServer/Home/User/editUserHead";
+        OkHttpClient client=new OkHttpClient.Builder()
+                .readTimeout(100000, TimeUnit.SECONDS)
+                .writeTimeout(200000,TimeUnit.SECONDS)
+                .readTimeout(300000,TimeUnit.SECONDS)
+                .build();
+        RequestBody imgBody=RequestBody.create(MediaType.parse("image/jpeg"),f);
+        MultipartBody.Builder builder1=new MultipartBody.Builder().setType(MultipartBody.FORM);
+        builder1.addFormDataPart("image",f.getName(),imgBody);
+        builder1.addFormDataPart("id","1");
+        Request.Builder builder=new Request.Builder().url(url).post(builder1.build());
+//        try {
+//            Response response=client.newCall(builder.build()).execute();
+//            if (response.isSuccessful()){
+//                System.out.println(new String (response.body().string().getBytes(),"utf-8"));
+//            }
+
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        client.newCall(builder.build()).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String result=new String(response.body().string().getBytes(),"UTF-8");
+                System.out.println(result);
+            }
+        });
+    }
+
+    static class A{
+        A(){
+            System.out.printf("A");
+        }
+    }
+
+    static class B extends A{
+        B(){
+            System.out.printf("B");
+        }
     }
 
     private static void maoPao(int[] arr){

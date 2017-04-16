@@ -50,4 +50,8 @@ public abstract class BaseNestedAdapter<T> {
     public int getViewType(int position){
         return 0;
     }
+
+    public T getItem(int position){
+        return mDatas.get(position);
+    }
 }

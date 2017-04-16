@@ -7,6 +7,7 @@
 
 <android.support.v4.widget.SwipeRefreshLayout
     android:id="@+id/swipe"
+    android:background="#ffffff"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <android.support.v7.widget.RecyclerView
@@ -17,6 +18,7 @@
 </android.support.v4.widget.SwipeRefreshLayout>
 <com.liberty.libertylibrary.widget.ErrorEmptyLayout
     android:id="@+id/error"
+    android:visibility="gone"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 </com.liberty.libertylibrary.widget.ErrorEmptyLayout>

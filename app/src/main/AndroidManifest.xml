@@ -3,10 +3,13 @@
     package="com.liberty.wikepro">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+
+    <uses-feature android:name="android.hardware.camera" android:required="true"/>
 
     <application
         android:name=".WikeApplication"
@@ -17,6 +20,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden"
             android:launchMode="singleTop">
 
         </activity>
@@ -43,6 +47,42 @@
             >
 
         </activity>
+        <activity android:name=".view.activity.AboutActivity"/>
+        <activity android:name=".view.activity.RecommendActivity">
+
+        </activity>
+        <activity android:name=".view.activity.CatagoryActivity">
+        </activity>
+        <activity android:name=".view.activity.MyCourseActivity">
+        </activity>
+        <activity android:name=".view.activity.WebViewActivity" >
+            <intent-filter>
+                <action android:name="com.liberty.wikepro.VIEW"/>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:scheme="wikeApp" android:host="wikeHost"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".view.activity.ScoreActivity">
+        </activity>
+        <activity android:name=".view.activity.SearchActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/SearchTheme"
+            android:windowSoftInputMode="adjustPan|stateHidden">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.SEARCH"/>-->
+            <!--</intent-filter>-->
+            <!--<meta-data android:name="android.app.searchable" android:resource="@xml/searchable"/>-->
+        </activity>
+        <provider
+            android:authorities="com.liberty.wikepro.fileprovider"
+            android:name="android.support.v4.content.FileProvider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths"/>
+        </provider>
     </application>
 
 </manifest>

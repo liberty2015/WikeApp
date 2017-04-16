@@ -51,7 +51,7 @@ public class NestFullListView extends LinearLayout {
             if (adapter.getmDatas()!=null
                     &&!adapter.getmDatas().isEmpty()){
                 if (adapter.getItemCount()<getChildCount()){
-                    removeViews(adapter.getItemCount(),getChildCount());
+                    removeViews(adapter.getItemCount(),getChildCount()-adapter.getItemCount());
                     while (mVHCaches.size()>adapter.getItemCount()){
                         mVHCaches.remove(mVHCaches.size()-1);
                     }

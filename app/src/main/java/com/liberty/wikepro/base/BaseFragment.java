@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.liberty.wikepro.WikeApplication;
+import com.liberty.wikepro.component.ApplicationComponent;
 import com.liberty.wikepro.view.widget.ProgressDialog;
 
 import butterknife.ButterKnife;
@@ -43,6 +45,7 @@ public abstract class BaseFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mUnbinder= ButterKnife.bind(this,view);
+        setFragmentComponent(WikeApplication.getInstance().mAppComponent);
         attachView();
         initView();
         initData();
@@ -102,5 +105,9 @@ public abstract class BaseFragment extends Fragment {
 
     public <V extends View> V findView(@IdRes int id){
         return (V) parentView.findViewById(id);
+    }
+
+    protected void setFragmentComponent(ApplicationComponent component){
+
     }
 }

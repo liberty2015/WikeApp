@@ -3,6 +3,7 @@ package com.liberty.wikepro.view.activity;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.os.Handler;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.widget.AppCompatButton;
 import android.text.TextUtils;
@@ -22,10 +23,12 @@ import com.liberty.wikepro.base.BaseActivity;
 import com.liberty.wikepro.component.ApplicationComponent;
 import com.liberty.wikepro.component.DaggerLoginComponent;
 import com.liberty.wikepro.contact.LoginContact;
+import com.liberty.wikepro.model.AppPreferenceHelper;
 import com.liberty.wikepro.model.bean.Student;
 import com.liberty.wikepro.presenter.LoginPresenter;
 import com.liberty.wikepro.util.DialogBoxUtil;
 import com.liberty.wikepro.util.TextInputUtil;
+import com.liberty.wikepro.util.ToastHelper;
 
 import javax.inject.Inject;
 
@@ -73,43 +76,55 @@ public class LoginActivity extends BaseActivity implements LoginContact.View{
 
     private int isPhone=2;
 
+    public final static String LoginPre="loginPre";
+
     @Inject
     LoginPresenter loginPresenter;
 
     @Override
     protected void initToolbar() {
-
     }
 
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        if (goAnim!=null){
-            goAnim.start();
+        boolean isLogin=AppPreferenceHelper.getInstance(this,LoginPre).getBoolean("isLogin",false);
+        if (!isLogin){
+            if (goAnim!=null){
+                goAnim.start();
+            }else {
+                int finalIn= (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,-70,getResources().getDisplayMetrics())+goContainer.getHeight()/2;
+                goAnim=ValueAnimator.ofFloat(0,finalIn).setDuration(1000);
+                goAnim.setTarget(goContainer);
+                goAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        float animatedFraction = animation.getAnimatedFraction();
+                        float alpha=animatedFraction*1.0f;
+                        Log.d("xxxxx","animatedFraction="+animatedFraction+"   alpha="+alpha);
+                        goContainer.setTranslationY((Float) animation.getAnimatedValue());
+                        goContainer.setAlpha(alpha);
+                    }
+                });
+                goAnim.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        super.onAnimationStart(animation);
+                        goContainer.setAlpha(0f);
+                        goContainer.setVisibility(View.VISIBLE);
+                    }
+                });
+                goAnim.setInterpolator(new AccelerateDecelerateInterpolator());
+                goAnim.start();
+            }
         }else {
-            int finalIn= (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,-70,getResources().getDisplayMetrics())+goContainer.getHeight()/2;
-            goAnim=ValueAnimator.ofFloat(0,finalIn).setDuration(1000);
-            goAnim.setTarget(goContainer);
-            goAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            new Handler().postDelayed(new Runnable() {
                 @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    float animatedFraction = animation.getAnimatedFraction();
-                    float alpha=animatedFraction*1.0f;
-                    Log.d("xxxxx","animatedFraction="+animatedFraction+"   alpha="+alpha);
-                    goContainer.setTranslationY((Float) animation.getAnimatedValue());
-                    goContainer.setAlpha(alpha);
+                public void run() {
+                    finish();
+                    startOtherActivity(MainActivity.class);
                 }
-            });
-            goAnim.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationStart(Animator animation) {
-                    super.onAnimationStart(animation);
-                    goContainer.setAlpha(0f);
-                    goContainer.setVisibility(View.VISIBLE);
-                }
-            });
-            goAnim.setInterpolator(new AccelerateDecelerateInterpolator());
-            goAnim.start();
+            },1000);
         }
     }
 
@@ -152,15 +167,34 @@ public class LoginActivity extends BaseActivity implements LoginContact.View{
                 String loginName=user.getText().toString();
                 if (TextUtils.isEmpty(loginName)){
                     user.setError("不能为空！");
+                    user.requestFocus();
+                    return;
+                }else if (TextInputUtil.isPhone(loginName)){
+                    isPhone=0;
+                }else if (TextInputUtil.isEmail(loginName)){
+                    isPhone=1;
+                }else {
+                    user.setError("请输入正确格式的手机号码或邮箱账号");
+                    user.requestFocus();
                     return;
                 }
                 String password=passwordEdit.getText().toString();
                 if (TextUtils.isEmpty(password)){
                     passwordEdit.setError("密码不能为空");
+                    passwordEdit.requestFocus();
                     return;
                 }
-                startOtherActivity(MainActivity.class);
-                finish();
+                showDialog();
+                switch (isPhone){
+                    case 0:{
+                        loginPresenter.loginByPhone(loginName,password);
+                    }
+                    break;
+                    case 1:{
+                        loginPresenter.loginByEmail(loginName,password);
+                    }
+                    break;
+                }
             }
             break;
             case R.id.back:{
@@ -185,6 +219,7 @@ public class LoginActivity extends BaseActivity implements LoginContact.View{
                     String loginName=loginNameRegister.getText().toString();
                     if (TextUtils.isEmpty(loginName)){
                         loginNameRegister.setError("不能为空！");
+                        loginNameRegister.requestFocus();
                         loginNameRegister.setEnabled(true);
                         return;
                     }else if (TextInputUtil.isPhone(loginName)){
@@ -195,20 +230,23 @@ public class LoginActivity extends BaseActivity implements LoginContact.View{
                         isPhone=1;
                     }else {
                         loginNameRegister.setError("请输入正确格式的手机号码或邮箱账号");
+                        loginNameRegister.requestFocus();
                         return;
                     }
                     Log.d("xxxxx","isPhone="+isPhone);
                     String nickName=userRegister.getText().toString();
                     if (nickName.equals("")){
                         userRegister.setError("用户名不能为空！");
-                        userRegister.setFocusable(true);
+                        userRegister.requestFocus();
+//                        userRegister.setFocusable(true);
                         return;
                     }else {
-                        student.setNickName(nickName);
+                        student.setNickname(nickName);
                     }
                     String password=passwordRegister.getText().toString();
                     if (password.equals("")){
                         passwordRegister.setError("密码不能为空！");
+                        passwordRegister.requestFocus();
                         return;
                     }else {
                         student.setPassword(password);
@@ -221,6 +259,7 @@ public class LoginActivity extends BaseActivity implements LoginContact.View{
                     Log.d("xxxxxx","name="+name);
                     if (TextUtils.isEmpty(name)){
                         nameRegister.setError("姓名不能为空！");
+                        nameRegister.requestFocus();
                         return;
                     }else {
                         student.setName(name);
@@ -386,23 +425,53 @@ public class LoginActivity extends BaseActivity implements LoginContact.View{
     }
 
     @Override
-    public void loginSuccess() {
-
+    public void loginSuccess(Student student) {
+        ToastHelper.showToast(this,"登录成功！");
+        AppPreferenceHelper.getInstance(this,LoginPre)
+                .putBoolean("isLogin",true)
+                .putInt("id",student.getId())
+                .putString("name",student.getName())
+                .putString("nickName",student.getNickname())
+                .putString("password",student.getPassword())
+                .putString("phone",student.getPhone())
+                .putString("email",student.getEmail())
+                .putInt("gender",student.getGender())
+                .putString("self_describe",student.getSelf_describe())
+                .putString("head_img",student.getHead_img())
+                .putString("page_img",student.getPage_img())
+                .putString("job",student.getJob());
+        finish();
+        startOtherActivity(MainActivity.class);
     }
 
     @Override
     public void loginFail() {
-
+        ToastHelper.showToast(this,"登录失败！密码错误或用户名不存在。");
     }
 
     @Override
-    public void registerSuccess() {
-
+    public void registerSuccess(Student student) {
+        ToastHelper.showToast(this,"注册成功！");
+        AppPreferenceHelper.getInstance(this,LoginPre)
+                .putBoolean("isLogin",true)
+                .putInt("id",student.getId())
+                .putString("name",student.getName())
+                .putString("nickName",student.getNickname())
+                .putString("password",student.getPassword())
+                .putString("phone",student.getPhone())
+                .putString("email",student.getEmail())
+                .putInt("gender",student.getGender())
+                .putString("self_describe",student.getSelf_describe())
+                .putString("head_img",student.getHead_img())
+                .putString("page_img",student.getPage_img())
+                .putString("job",student.getJob());
+        finish();
+        startOtherActivity(RecommendActivity.class);
     }
 
     @Override
-    public void registerFail() {
-
+    public void registerFail(String result) {
+        ToastHelper.showToast(this,result);
     }
 
     @Override

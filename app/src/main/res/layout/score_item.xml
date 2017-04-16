@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardBackgroundColor="#fff"
+    app:cardCornerRadius="2dp"
+    app:cardElevation="3dp"
+    app:contentPadding="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="15dp">
+    <LinearLayout
+        android:id="@+id/container"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/chapter_name"
+            android:text="fafaa"
+            android:layout_marginBottom="5dp"
+            android:textSize="18sp"
+            android:textColor="#4d4d4d"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <View
+            android:background="#c6c6c6"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"/>
+        <com.liberty.libertylibrary.widget.NestListView.NestFullListView
+            android:id="@+id/nestList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </com.liberty.libertylibrary.widget.NestListView.NestFullListView>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

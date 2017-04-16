@@ -10,7 +10,9 @@ import com.liberty.wikepro.net.OkHttpUtil;
 public interface LoginM {
     void registerByPhone(Student student, OkHttpUtil.OkHttpResponseIMPL impl);
 
-    void login(String userName, String password,OkHttpUtil.OkHttpResponseIMPL impl);
+    void loginByPhone(String userName, String password,OkHttpUtil.OkHttpResponseIMPL impl);
+
+    void loginByEmail(String userName, String password,OkHttpUtil.OkHttpResponseIMPL impl);
 
     void registerByEmail(Student student,OkHttpUtil.OkHttpResponseIMPL impl);
 

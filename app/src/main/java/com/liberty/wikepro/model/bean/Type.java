@@ -6,7 +6,8 @@ import android.os.Parcel;
  * Created by LinJinFeng on 2017/2/17.
  */
 
-public class Type extends BaseBean {
+public class Type extends BaseBean implements itemType{
+    private int id;
     private String name;
     private int did;
     private String tdev;
@@ -16,9 +17,18 @@ public class Type extends BaseBean {
     }
 
     private Type(Parcel in){
+        id=in.readInt();
         name=in.readString();
         did=in.readInt();
         tdev=in.readString();
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public void setName(String name) {
@@ -52,6 +62,7 @@ public class Type extends BaseBean {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
         dest.writeString(name);
         dest.writeInt(did);
         dest.writeString(tdev);

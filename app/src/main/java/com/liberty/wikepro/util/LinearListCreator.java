@@ -119,8 +119,9 @@ public class LinearListCreator implements View.OnClickListener{
                 item.setLayoutParams(params);
 //                creator.views.add(item);
                 creator.viewHashMap.put(key,item);
+                creator.normalCount++;
             }
-            creator.normalCount=count;
+//            creator.normalCount=count;
             return this;
         }
 

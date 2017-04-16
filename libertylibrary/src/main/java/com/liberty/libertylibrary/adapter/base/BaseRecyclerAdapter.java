@@ -373,6 +373,18 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<BaseHo
         return footers.size();
     }
 
+    public boolean isHeader(int position){
+        if (headers.size()>0&&position<=(headers.size()-1)){
+            if (position<=(headers.size()-1)){
+                return true;
+            }else {
+                return false;
+            }
+        }else {
+            return false;
+        }
+    }
+
     private class HeaderFooterHolder extends BaseHolder{
 
         HeaderFooterHolder(View itemView) {

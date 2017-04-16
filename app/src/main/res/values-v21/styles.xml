@@ -11,6 +11,7 @@
         <item name="android:windowAllowReturnTransitionOverlap">false</item>
     </style>
     <style name="TranslucentTheme" parent="BaseTheme">
+        <item name="android:windowContentTransitions">true</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">false</item>
         <item name="android:statusBarColor">@android:color/transparent</item>

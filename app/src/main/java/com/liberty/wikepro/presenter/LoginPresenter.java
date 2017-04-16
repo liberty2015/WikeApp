@@ -1,5 +1,6 @@
 package com.liberty.wikepro.presenter;
 
+import com.google.gson.Gson;
 import com.liberty.wikepro.base.BasePresenter;
 import com.liberty.wikepro.contact.LoginContact;
 import com.liberty.wikepro.model.LoginModel;
@@ -25,26 +26,55 @@ public class LoginPresenter extends BasePresenter<LoginContact.View> implements 
     }
 
     @Override
-    public void login(String userName, String password) {
-        loginModel.login(userName, password, new OkHttpUtil.OkHttpResponseIMPL() {
+    public void loginByPhone(String userName, String password) {
+        loginModel.loginByPhone(userName, password, new OkHttpUtil.OkHttpResponseIMPL() {
             @Override
             public void onSuccess(String result) {
-                mView.loginSuccess();
+                mView.complete();
             }
 
             @Override
             public void onError(String error) {
-
+                mView.loginFail();
             }
 
             @Override
             public void onAnalyseDataSuccess(String result) {
-
+                Gson gson=new Gson();
+                Student student=gson.fromJson(result,Student.class);
+                mView.loginSuccess(student);
             }
 
             @Override
             public void onAnalyseDataError(String result) {
+                mView.loginFail();
+            }
+        });
+    }
 
+    @Override
+    public void loginByEmail(String userName, String password) {
+        loginModel.loginByEmail(userName, password, new OkHttpUtil.OkHttpResponseIMPL() {
+            @Override
+            public void onSuccess(String result) {
+                mView.complete();
+            }
+
+            @Override
+            public void onError(String error) {
+                mView.loginFail();
+            }
+
+            @Override
+            public void onAnalyseDataSuccess(String result) {
+                Gson gson=new Gson();
+                Student student=gson.fromJson(result,Student.class);
+                mView.loginSuccess(student);
+            }
+
+            @Override
+            public void onAnalyseDataError(String result) {
+                mView.loginFail();
             }
         });
     }
@@ -64,16 +94,20 @@ public class LoginPresenter extends BasePresenter<LoginContact.View> implements 
 
             @Override
             public void onAnalyseDataSuccess(String result) {
-                try {
-                    JSONObject object=new JSONObject(result);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                Gson gson=new Gson();
+                Student student=gson.fromJson(result,Student.class);
+                mView.registerSuccess(student);
             }
 
             @Override
             public void onAnalyseDataError(String result) {
-
+                try {
+                    JSONObject object=new JSONObject(result);
+                    String message=object.getString("message");
+                    mView.registerFail(message);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -93,12 +127,20 @@ public class LoginPresenter extends BasePresenter<LoginContact.View> implements 
 
             @Override
             public void onAnalyseDataSuccess(String result) {
-
+                Gson gson=new Gson();
+                Student student=gson.fromJson(result,Student.class);
+                mView.registerSuccess(student);
             }
 
             @Override
             public void onAnalyseDataError(String result) {
-
+                try {
+                    JSONObject object=new JSONObject(result);
+                    String message=object.getString("message");
+                    mView.registerFail(message);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

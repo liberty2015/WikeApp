@@ -74,7 +74,7 @@ public class BannerViewPager extends ViewPager {
 
 
     public interface OnItemClickListener{
-        public void onItemClick(int position);
+        public void onItemClick(Banner banner,int position);
     }
 
     public BannerViewPager(Context context) {
@@ -321,7 +321,7 @@ public class BannerViewPager extends ViewPager {
                 @Override
                 public void onClick(View v) {
                     if (itemClickListener!=null){
-                        itemClickListener.onItemClick(finalPosition);
+                        itemClickListener.onItemClick(BannerViewPager.this.banner,finalPosition);
                     }
                 }
             });

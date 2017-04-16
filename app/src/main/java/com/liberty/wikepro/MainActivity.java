@@ -1,13 +1,24 @@
 package com.liberty.wikepro;
 
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.AppCompatImageView;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.liberty.wikepro.base.BaseActivity;
 import com.liberty.wikepro.base.BaseFragment;
-import com.liberty.wikepro.view.fragment.KindFragment;
+import com.liberty.wikepro.model.AppPreferenceHelper;
+import com.liberty.wikepro.model.bean.Student;
+import com.liberty.wikepro.view.activity.LoginActivity;
+import com.liberty.wikepro.view.activity.SearchActivity;
 import com.liberty.wikepro.view.fragment.HomePageFragment;
+import com.liberty.wikepro.view.fragment.KindFragment;
 import com.liberty.wikepro.view.fragment.MineFragment;
 import com.liberty.wikepro.view.widget.NavBtn;
 import com.liberty.wikepro.view.widget.adapter.ViewPagerAdapter;
@@ -33,6 +44,10 @@ public class MainActivity extends BaseActivity {
 
     String[] titles;
 
+    private AppCompatImageView searchImg;
+
+    protected Student student;
+
     private boolean pressAgain=false;
 
     @BindView(R.id.viewPager)
@@ -42,12 +57,54 @@ public class MainActivity extends BaseActivity {
     protected void initToolbar() {
         mCommonToolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
         mCommonToolbar.setTitle(titles[0]);
+        searchImg=new AppCompatImageView(this);
+        searchImg.setImageResource(R.drawable.ic_search);
+        ViewGroup.MarginLayoutParams params=new Toolbar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,Gravity.RIGHT);
+        params.rightMargin= (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,20,getResources().getDisplayMetrics());
+        mCommonToolbar.addView(searchImg,params);
+        searchImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startOtherActivity(SearchActivity.class);
+            }
+        });
         homePage.setIsSelect(true);
     }
 
+
+
     @Override
     protected void initData() {
+        student=new Student();
+        student.setId(AppPreferenceHelper.getInstance(this, LoginActivity.LoginPre).getInt("id",0));
+        student.setName(AppPreferenceHelper.getInstance(this, LoginActivity.LoginPre).getString("name",""));
+        student.setNickname(AppPreferenceHelper.getInstance(this, LoginActivity.LoginPre).getString("nickName",""));
+        student.setPhone(AppPreferenceHelper.getInstance(this, LoginActivity.LoginPre).getString("phone",""));
+        student.setPassword(AppPreferenceHelper.getInstance(this, LoginActivity.LoginPre).getString("password",""));
+        student.setEmail(AppPreferenceHelper.getInstance(this, LoginActivity.LoginPre).getString("email",""));
+        student.setSelf_describe(AppPreferenceHelper.getInstance(this, LoginActivity.LoginPre).getString("self_describe",""));
+        student.setHead_img(AppPreferenceHelper.getInstance(this, LoginActivity.LoginPre).getString("head_img",""));
+        student.setPage_img(AppPreferenceHelper.getInstance(this, LoginActivity.LoginPre).getString("page_img",""));
+        student.setJob(AppPreferenceHelper.getInstance(this, LoginActivity.LoginPre).getString("job",""));
+        student.setGender(AppPreferenceHelper.getInstance(this,LoginActivity.LoginPre).getInt("gender",1));
+        WikeApplication.getInstance().setStudent(student);
         titles=getResources().getStringArray(R.array.main_arr);
+    }
+
+//    public static Student getStudent() {
+//        return student;
+//    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable("student",student);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        student=savedInstanceState.getParcelable("student");
     }
 
     @Override
@@ -70,6 +127,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onPageSelected(int position) {
                 setNavTitle(position);
+                setSearchImgVisuality(position);
             }
 
             @Override
@@ -78,6 +136,14 @@ public class MainActivity extends BaseActivity {
             }
         });
         viewPager.setCurrentItem(0);
+    }
+
+    private void setSearchImgVisuality(int position){
+        if (position<2){
+            searchImg.setVisibility(View.VISIBLE);
+        }else {
+            searchImg.setVisibility(View.GONE);
+        }
     }
 
     private void setNavTitle(int position){
@@ -142,5 +208,17 @@ public class MainActivity extends BaseActivity {
             }
             break;
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("xxxxxxx","----onPause----");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("xxxxxxx","----onStop----");
     }
 }

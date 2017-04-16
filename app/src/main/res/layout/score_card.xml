@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:background="#2dfc4f"
+    android:padding="10dp">
+    <TextView
+        android:text="您该门课程的评分成绩已出，点我查看！"
+        android:textColor="#fff"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <android.support.v7.widget.AppCompatImageView
+        app:srcCompat="@drawable/ic_angle"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="15dp" />
+</RelativeLayout>

@@ -112,7 +112,7 @@ public class LoadingView extends View{
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 offset1= (float) animator1.getAnimatedValue();
-                Log.d("xxxxx","offset1="+offset1);
+//                Log.d("xxxxx","offset1="+offset1);
                 invalidate();
             }
         });
@@ -124,7 +124,7 @@ public class LoadingView extends View{
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 offset2= (float) animator2.getAnimatedValue();
-                Log.d("xxxxx","offset2="+offset2);
+//                Log.d("xxxxx","offset2="+offset2);
                 invalidate();
             }
         });
@@ -161,8 +161,8 @@ public class LoadingView extends View{
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        Log.d("xxxxx","-----onDraw-----");
-        Log.d("xxxxx","width="+bitmap.getWidth()+"  height="+bitmap.getHeight()+"  cx="+cx+"  cy="+cy);
+//        Log.d("xxxxx","-----onDraw-----");
+//        Log.d("xxxxx","width="+bitmap.getWidth()+"  height="+bitmap.getHeight()+"  cx="+cx+"  cy="+cy);
         path.reset();
         path.moveTo(-waveLength+offset1,height+offset2);
         for(int i=0;i<waveCount;i++){

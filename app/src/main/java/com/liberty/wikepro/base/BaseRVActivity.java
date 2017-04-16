@@ -22,13 +22,6 @@ public abstract class BaseRVActivity<T1 extends BaseContact.BasePresenter,T2>
         extends BaseActivity
         implements SwipeRefreshLayout.OnRefreshListener ,OnLoadMoreListener {
 
-    /**
-     * 若要继承该类，请务必使用common_list_fragment布局，
-     * 或者自己在布局中添加RecyclerView、SwipeRefreshLayout
-     * 和ErrorEmptyLayout。后期计划将它们封装成一个容器类
-     */
-    protected T1 mPresenter;
-
     @BindView(R.id.list)
     protected RecyclerView list;
     protected BaseRecyclerAdapter<T2> mAdapter;
@@ -47,9 +40,6 @@ public abstract class BaseRVActivity<T1 extends BaseContact.BasePresenter,T2>
             refreshLayout.setOnRefreshListener(this);
         }
         errorEmptyLayout=ButterKnife.findById(this,R.id.error);
-        if (mPresenter!=null){
-            mPresenter.attachView(this);
-        }
     }
 
     protected void initAdapter(BaseRecyclerAdapter<T2> adapter,OnRecyclerItemClickListener listener,
@@ -100,6 +90,8 @@ public abstract class BaseRVActivity<T1 extends BaseContact.BasePresenter,T2>
             if (refreshLayout!=null){
                 if (refreshable){
                     refreshLayout.setOnRefreshListener(this);
+                }else {
+                    refreshLayout.setEnabled(false);
                 }
             }
         }
@@ -107,8 +99,6 @@ public abstract class BaseRVActivity<T1 extends BaseContact.BasePresenter,T2>
 
     @Override
     public void onRefresh() {
-        if (refreshLayout!=null&&!refreshLayout.isRefreshing()){
-            refreshLayout.setRefreshing(true);
-        }
+
     }
 }

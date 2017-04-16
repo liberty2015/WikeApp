@@ -12,6 +12,7 @@
         <!--android:background="@color/tintColor"-->
         <!--android:layout_height="match_parent"/>-->
     <com.liberty.wikepro.view.widget.HistoryListItemView
+        android:id="@+id/historyItem"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="20dp"
         android:layout_width="25dp"

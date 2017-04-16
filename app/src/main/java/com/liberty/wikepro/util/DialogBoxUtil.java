@@ -1,6 +1,5 @@
 package com.liberty.wikepro.util;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
@@ -8,6 +7,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -32,14 +32,39 @@ public class DialogBoxUtil {
         dialog.show();
     }
 
-    public static void showGetPicDialog(Context context, final LinearListCreator.OnClickCallback clickCallback){
-        final Dialog dialog=new Dialog(context);
-        ViewGroup contentView= (ViewGroup) LayoutInflater.from(context).inflate(R.layout.empty_layout,null);
+    public static void showEditDialog(Context context,String hint, final onEditTextCallback callback){
+        ViewGroup contentView= (ViewGroup) LayoutInflater.from(context).inflate(R.layout.edit_dialog,null);
         ViewGroup.LayoutParams params1=new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
-        dialog.setContentView(contentView,params1);
+        final EditText editText= (EditText) contentView.findViewById(R.id.edit);
+        editText.setHint(hint);
+        final AlertDialog dialog=new AlertDialog.Builder(context)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                callback.onEditTextCallback(editText.getText().toString());
+            }
+        })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).setView(contentView).create();
+
+//        dialog.setContentView(contentView,params1);
+        dialog.show();
+    }
+
+    public static void showGetPicDialog(Context context, final LinearListCreator.OnClickCallback clickCallback){
+//        final Dialog dialog=new Dialog(context);
+        ViewGroup contentView= (ViewGroup) LayoutInflater.from(context).inflate(R.layout.empty_layout,null);
+//        ViewGroup.LayoutParams params1=new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+//                ViewGroup.LayoutParams.MATCH_PARENT);
+//        dialog.setContentView(contentView,params1);
         LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,50,context.getResources().getDisplayMetrics()));
+        final AlertDialog dialog=new AlertDialog.Builder(context).setView(contentView).create();
         new LinearListCreator.Builder(context,R.layout.txt_item)
                 .needLine(true)
                 .withBaseView(contentView)
@@ -70,4 +95,16 @@ public class DialogBoxUtil {
                 .create();
         dialog.show();
     }
+
+    public static void showCenterDialog(Context context,String message,View view){
+        AlertDialog dialog=new AlertDialog.Builder(context).setView(view).create();
+
+    }
+
+    public interface onEditTextCallback{
+        void onEditTextCallback(String editText);
+    }
+
+
+
 }

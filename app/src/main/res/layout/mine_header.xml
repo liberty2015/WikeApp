@@ -13,18 +13,17 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <ImageView
+        <android.support.v7.widget.AppCompatImageView
             android:id="@+id/headerImg"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
-            android:src="@mipmap/ic_wike_logo"
+            app:srcCompat="@drawable/ic_male"
             android:layout_marginRight="10dp"
             android:layout_width="80dp"
             android:layout_height="80dp" />
 
         <TextView
             android:id="@+id/userName"
-            android:text="Liberty"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             android:shadowColor="#454545"
@@ -47,7 +46,6 @@
         <TextView
             android:id="@+id/userJob"
             android:layout_toRightOf="@id/headerImg"
-            android:text="Android 工程师"
             android:textColor="@android:color/white"
             android:textSize="15sp"
             android:shadowColor="#454545"
@@ -60,7 +58,6 @@
         <TextView
             android:id="@+id/userDescription"
             android:layout_below="@id/headerImg"
-            android:text="Android 工程师"
             android:textColor="@android:color/white"
             android:textSize="15sp"
             android:shadowColor="#454545"

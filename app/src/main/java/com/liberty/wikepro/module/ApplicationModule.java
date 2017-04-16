@@ -1,6 +1,7 @@
 package com.liberty.wikepro.module;
 
 import android.app.Application;
+import android.content.Context;
 
 import dagger.Module;
 import dagger.Provides;
@@ -12,13 +13,20 @@ import dagger.Provides;
 @Module
 public class ApplicationModule {
     Application mApplication;
+    Context context;
 
     public ApplicationModule(Application application){
         mApplication=application;
+        context=application;
     }
 
     @Provides
-    Application providesApplication(){
+    public Application provideApplication(){
         return mApplication;
+    }
+
+    @Provides
+    public Context provideContext(){
+        return context;
     }
 }

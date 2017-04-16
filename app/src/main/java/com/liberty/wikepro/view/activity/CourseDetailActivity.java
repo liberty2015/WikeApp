@@ -3,6 +3,7 @@ package com.liberty.wikepro.view.activity;
 import android.annotation.TargetApi;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
@@ -12,22 +13,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.liberty.libertylibrary.adapter.base.BaseRecyclerAdapter;
 import com.liberty.libertylibrary.adapter.base.OnRecyclerItemClickListener;
 import com.liberty.wikepro.R;
+import com.liberty.wikepro.WikeApplication;
 import com.liberty.wikepro.base.BaseRVActivity;
+import com.liberty.wikepro.component.ApplicationComponent;
+import com.liberty.wikepro.component.DaggerCourseComponent;
 import com.liberty.wikepro.contact.CourseContact;
-import com.liberty.wikepro.model.bean.CVideo;
+import com.liberty.wikepro.contact.CourseDetailContact;
 import com.liberty.wikepro.model.bean.Chapter;
+import com.liberty.wikepro.model.bean.Course;
+import com.liberty.wikepro.model.bean.User;
 import com.liberty.wikepro.model.bean.itemType;
+import com.liberty.wikepro.net.WikeApi;
+import com.liberty.wikepro.presenter.CourseDetailPresenter;
 import com.liberty.wikepro.util.ImageUtil;
 import com.liberty.wikepro.util.StatusBarCompat;
 import com.liberty.wikepro.view.widget.adapter.ChapterVideoAdapter;
-import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 
@@ -35,18 +44,41 @@ import butterknife.BindView;
  * Created by LinJinFeng on 2017/2/22.
  */
 
-public class CourseDetailActivity extends BaseRVActivity<CourseContact.Presenter,itemType> {
+public class CourseDetailActivity extends BaseRVActivity<CourseContact.Presenter,itemType> implements CourseDetailContact.View{
 
     @BindView(R.id.collapsingToolbar)
     CollapsingToolbarLayout collapsingToolbarLayout;
     @BindView(R.id.startStudy)
     FloatingActionButton startStudy;
 
+    TextView teacherName,teacherJob;
+
     View courseDetailHeader;
+
+    ImageView headerImg;
+
+    Course course;
+
+    @Inject
+    CourseDetailPresenter detailPresenter;
 
     @Override
     protected void initToolbar() {
         mCommonToolbar.setTitleTextColor(Color.WHITE);
+        mCommonToolbar.setTitle(course.getCname());
+//        try {
+//            Field textView= Toolbar.class.getDeclaredField("mTitleTextView");
+//            textView.setAccessible(true);
+//            TextView mTitleTextView= (TextView) textView.get(mCommonToolbar);
+//            float radius= TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,5,getResources().getDisplayMetrics());
+//            float dx= TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,5,getResources().getDisplayMetrics());
+//            float dy=dx;
+//            mTitleTextView.setTranslationZ(dx);
+//            mTitleTextView.setLayerType(View.LAYER_TYPE_SOFTWARE,null);
+//            mTitleTextView.setShadowLayer(radius,dx,dy,Color.BLACK);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mCommonToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,20 +97,12 @@ public class CourseDetailActivity extends BaseRVActivity<CourseContact.Presenter
 
             }
         },false,false);
-        initTestData();
+        course=getIntent().getParcelableExtra("course");
     }
 
     @Override
     protected void initViews() {
-//        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
-//            View decorView=getWindow().getDecorView();
-//            int option=View.SYSTEM_UI_FLAG_FULLSCREEN|View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-//            decorView.setSystemUiVisibility(option);
-//            getWindow().setStatusBarColor(Color.TRANSPARENT);
-//        }else if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT){
-//            WindowManager.LayoutParams params=getWindow().getAttributes();
-//            params.flags=WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS|params.flags;
-//        }
+        detailPresenter.attachView(this);
         StatusBarCompat.getTranslucentForCollapsingToolbarLayout(this,mCommonToolbar);
         collapsingToolbarLayout.setExpandedTitleColor(Color.WHITE);
         collapsingToolbarLayout.setCollapsedTitleTextColor(Color.WHITE);
@@ -91,18 +115,39 @@ public class CourseDetailActivity extends BaseRVActivity<CourseContact.Presenter
 
             @Override
             public void onBindView(View headerView) {
-                ImageView headerImg = (ImageView) headerView.findViewById(R.id.headerImg);
+                headerImg = (ImageView) headerView.findViewById(R.id.headerImg);
                 ImageUtil.getCircleImageIntoImageView(CourseDetailActivity.this,headerImg,
                         "http://static.oschina.net/uploads/space/2015/0629/162814_ow45_1767531.jpg",true);
+                teacherName= (TextView) headerView.findViewById(R.id.teacherName);
+                teacherJob= (TextView) headerView.findViewById(R.id.teacherJob);
             }
         });
+        ((TextView)courseDetailHeader.findViewById(R.id.cdescription)).setText(course.getDescribtion());
+        TextView clevel=((TextView)courseDetailHeader.findViewById(R.id.clevel));
+        switch (course.getClevel()){
+            case 0:{
+                clevel.setBackground(getResources().getDrawable(R.drawable.easy));
+                clevel.setText("简单");
+            }
+            break;
+            case 1:{
+                clevel.setBackground(getResources().getDrawable(R.drawable.middle));
+                clevel.setText("中等");
+            }
+            break;
+            case 2:{
+                clevel.setBackground(getResources().getDrawable(R.drawable.hard));
+                clevel.setText("困难");
+            }
+            break;
+        }
         startStudy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startOtherActivity(CourseVideoActivity.class);
+                detailPresenter.firstCourse(course.getId(), WikeApplication.getInstance().getStudent().getId());
             }
         });
-        Picasso.with(this).load("http://pic.uuhy.com/uploads/2011/10/15/Macro-Photos15.jpg").into((ImageView) findViewById(R.id.cover));
+        ImageUtil.getCircleImageIntoImageView(this,(ImageView) findViewById(R.id.cover),WikeApi.getInstance().getImageUrl(course.getPdev()),false);
         if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
             collapsingToolbarLayout.setTransitionGroup(false);
             getWindow().setSharedElementEnterTransition(
@@ -111,6 +156,7 @@ public class CourseDetailActivity extends BaseRVActivity<CourseContact.Presenter
             getWindow().setEnterTransition(initContentTransition());
             getWindow().setReturnTransition(TransitionInflater.from(this).inflateTransition(R.transition.return_slide));
         }
+        detailPresenter.getTeacherAndChapters(course.getUid(),course.getId());
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
@@ -131,10 +177,10 @@ public class CourseDetailActivity extends BaseRVActivity<CourseContact.Presenter
             @Override
             public void onTransitionEnd(Transition transition) {
                 transition.removeListener(this);
-                startStudy.animate()
-                        .scaleX(1)
-                        .scaleY(1)
-                        .start();
+//                startStudy.animate()
+//                        .scaleX(1)
+//                        .scaleY(1)
+//                        .start();
             }
 
             @Override
@@ -155,22 +201,19 @@ public class CourseDetailActivity extends BaseRVActivity<CourseContact.Presenter
         return transition;
     }
 
-    private void initTestData(){
-        List<itemType> itemTypes=new ArrayList<>();
-        for (int i=0;i<5;i++){
-            Chapter ch=new Chapter();
-            itemTypes.add(ch);
-            for (int j=0;j<3;j++){
-                CVideo cvideo=new CVideo();
-                itemTypes.add(cvideo);
-            }
-        }
-        mAdapter.addAll(itemTypes);
-    }
-
     @Override
     protected int setLayoutId() {
         return R.layout.course_detail_layout;
+    }
+
+    @Override
+    protected void setActivityComponent(ApplicationComponent component) {
+        super.setActivityComponent(component);
+        DaggerCourseComponent
+                .builder()
+                .applicationComponent(component)
+                .build()
+                .inject(this);
     }
 
     @Override
@@ -183,4 +226,33 @@ public class CourseDetailActivity extends BaseRVActivity<CourseContact.Presenter
         onBackPressed();
         return true;
     }
+
+    @Override
+    public void showError() {
+
+    }
+
+    @Override
+    public void complete() {
+
+    }
+
+    @Override
+    public void setTeacherAndChapters(User user, List<Chapter> chapters) {
+        mAdapter.addAll(chapters);
+        teacherName.setText(user.getName());
+        teacherJob.setText(user.getJob());
+    }
+
+    @Override
+    public void firstCourse() {
+        Bundle data=new Bundle();
+        data.putParcelable("course",course);
+        startOtherActivity(CourseVideoActivity.class,data);
+    }
+
+//    @Override
+//    public void showChapters(List<Chapter> chapters) {
+//
+//    }
 }

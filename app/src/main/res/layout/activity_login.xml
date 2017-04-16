@@ -100,7 +100,6 @@
                     android:id="@+id/user"
                     android:textSize="13sp"
                     android:drawableRight="@drawable/ic_user"
-                    android:inputType="phone|textEmailAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </android.support.design.widget.TextInputLayout>

@@ -50,7 +50,7 @@ public abstract class BaseRVFragment<T1 extends BaseContact.BasePresenter,T2> ex
         refreshLayout= ButterKnife.findById(getHoldActivity(),R.id.swipe);
         if (refreshLayout!=null){
             refreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
-            refreshLayout.setOnRefreshListener(this);
+//            refreshLayout.setOnRefreshListener(this);
         }
 //        list=ButterKnife.findById(getHoldActivity(),R.id.list);
         errorEmptyLayout=ButterKnife.findById(getHoldActivity(),R.id.error);

@@ -20,6 +20,7 @@ public class Course extends BaseBean implements itemType{
     private String pdev;
     private int spanCount;
     private int homeType;
+    private int hasStudy;
 
     public static final int RECOMMAND=0x11;
     public static final int NEW=0x12;
@@ -40,6 +41,8 @@ public class Course extends BaseBean implements itemType{
         describtion=in.readString();
         pdev=in.readString();
         spanCount=in.readInt();
+        homeType=in.readInt();
+        hasStudy=in.readInt();
     }
 
     public void setNEW() {
@@ -142,6 +145,18 @@ public class Course extends BaseBean implements itemType{
         this.spanCount = spanCount;
     }
 
+    public int getHasStudy() {
+        return hasStudy;
+    }
+
+    public void setHasStudy(int hasStudy) {
+        this.hasStudy = hasStudy;
+    }
+
+    public void setHomeType(int homeType) {
+        this.homeType = homeType;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -160,6 +175,8 @@ public class Course extends BaseBean implements itemType{
         dest.writeString(describtion);
         dest.writeString(pdev);
         dest.writeInt(spanCount);
+        dest.writeInt(homeType);
+        dest.writeInt(hasStudy);
     }
 
     public static final Creator<Course> CREATOR=new Creator<Course>() {

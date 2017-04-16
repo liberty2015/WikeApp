@@ -9,15 +9,16 @@ import com.liberty.wikepro.model.bean.Student;
 
 public interface LoginContact {
     interface View extends BaseContact.BaseView{
-        void loginSuccess();
+        void loginSuccess(Student student);
         void loginFail();
 
-        void registerSuccess();
-        void registerFail();
+        void registerSuccess(Student student);
+        void registerFail(String result);
     }
 
     interface Presenter extends BaseContact.BasePresenter<View>{
-        void login(String userName,String password);
+        void loginByPhone(String userName,String password);
+        void loginByEmail(String userName, String password);
 
         void registerByPhone(Student student);
 

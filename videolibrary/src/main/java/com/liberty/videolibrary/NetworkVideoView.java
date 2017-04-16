@@ -1,6 +1,5 @@
 package com.liberty.videolibrary;
 
-import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
@@ -21,7 +20,6 @@ import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import java.io.IOException;
@@ -48,11 +46,13 @@ public class NetworkVideoView extends FrameLayout implements
     private int mTotalDuration;
     private NetworkMediaController controller;
     private SurfaceView surfaceView;
-    private RelativeLayout rightPanel;
-
-    private ValueAnimator openAnim,closeAnim;
+//    private RelativeLayout rightPanel;
+//
+//    private ValueAnimator openAnim,closeAnim;
 
     private boolean hasPrepared;
+
+    private boolean setUrl;
 
     private int mVideoLayoutWidth,mVideoLayoutHeight;
     private int mVideoWidth,mVideoHeight;
@@ -90,26 +90,26 @@ public class NetworkVideoView extends FrameLayout implements
         LayoutInflater.from(getContext()).inflate(R.layout.video_layout,this);
         surfaceView= (SurfaceView) findViewById(R.id.surfaceView);
 
-        rightPanel=(RelativeLayout) findViewById(R.id.right_panel);
-        rightPanel.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                rightPanel.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                rightPanelWidth=rightPanel.getWidth();
-                openAnim=ValueAnimator.ofInt(-rightPanelWidth,0)
-                        .setDuration(400);
-                openAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) rightPanel.getLayoutParams();
-//                        Log.d("onAnimationUpdate","value="+rightMargin+"  rightMargin="+layoutParams.rightMargin+"  animation.getAnimatedValue()="+animation.getAnimatedValue());
-                        layoutParams.rightMargin= (int) animation.getAnimatedValue();
-                        rightPanel.setLayoutParams(layoutParams);
-                    }
-                });
-                openAnim.setTarget(rightPanel);
-            }
-        });
+//        rightPanel=(RelativeLayout) findViewById(R.id.right_panel);
+//        rightPanel.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                rightPanel.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+//                rightPanelWidth=rightPanel.getWidth();
+//                openAnim=ValueAnimator.ofInt(-rightPanelWidth,0)
+//                        .setDuration(400);
+//                openAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//                    @Override
+//                    public void onAnimationUpdate(ValueAnimator animation) {
+//                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) rightPanel.getLayoutParams();
+////                        Log.d("onAnimationUpdate","value="+rightMargin+"  rightMargin="+layoutParams.rightMargin+"  animation.getAnimatedValue()="+animation.getAnimatedValue());
+//                        layoutParams.rightMargin= (int) animation.getAnimatedValue();
+//                        rightPanel.setLayoutParams(layoutParams);
+//                    }
+//                });
+//                openAnim.setTarget(rightPanel);
+//            }
+//        });
 
 
 
@@ -274,19 +274,18 @@ public class NetworkVideoView extends FrameLayout implements
             this.url=url;
             mMediaPlayer.setDataSource(getContext(),Uri.parse(url));
             hasPrepared=false;
-
+            setUrl=true;
             /**
              * 设置好数据源才能调用setDisplay
              */
 //            mMediaPlayer.prepareAsync();
+        }else {
+            setUrl=false;
         }
     }
 
     public void setRightPanelView(View view){
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
-        layoutParams.height= LinearLayout.LayoutParams.MATCH_PARENT;
-        layoutParams.width=LinearLayout.LayoutParams.MATCH_PARENT;
-        rightPanel.addView(view,layoutParams);
+        controller.setRightPanel(view);
     }
 
     @Override
@@ -339,19 +338,20 @@ public class NetworkVideoView extends FrameLayout implements
         }
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (gestureDetector.onTouchEvent(event)){
-            return true;
-        }
-        switch (event.getAction()&MotionEvent.ACTION_MASK){
-            case MotionEvent.ACTION_UP:{
-                touchUp();
-            }
-            break;
-        }
-        return false;
-    }
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//            if (gestureDetector.onTouchEvent(event)){
+//                return true;
+//            }
+//            switch (event.getAction()&MotionEvent.ACTION_MASK){
+//                case MotionEvent.ACTION_UP:{
+//                    touchUp();
+//                }
+//                break;
+//            }
+////        }
+//        return false;
+//    }
 
     @Override
     public void seekTo(int position) {
@@ -361,7 +361,8 @@ public class NetworkVideoView extends FrameLayout implements
 
     @Override
     public void play() {
-        if (!hasPrepared){
+        if (!hasPrepared&&setUrl){
+
             mMediaPlayer.prepareAsync();
             controller.showLoading();
         }else {
@@ -376,6 +377,9 @@ public class NetworkVideoView extends FrameLayout implements
         }
     }
 
+    public void setTitle(String title){
+        controller.setTitle(title);
+    }
 
     @Override
     public boolean canPause() {
@@ -455,6 +459,7 @@ public class NetworkVideoView extends FrameLayout implements
     public int getCurrentPosition() {
         if (mMediaPlayer!=null){
             mCurrentBufferProgress=mMediaPlayer.getCurrentPosition();
+//            Log.d("xxxxxx","getCurrentPosition="+mCurrentBufferProgress);
             return mCurrentBufferProgress;
         }
         return mCurrentBufferProgress;
@@ -465,51 +470,51 @@ public class NetworkVideoView extends FrameLayout implements
         return mTotalDuration;
     }
 
-    private boolean rightPanelToggle=false;
+//    private boolean rightPanelToggle=false;
 
-    @Override
-    public void rightBtn() {
-        if (rightPanelToggle){
-            closeRightPanel();
-            rightPanelToggle=false;
-        }else {
-            openRightPanel();
-            rightPanelToggle=true;
-        }
-//        if (drawerLayout.isDrawerOpen(Gravity.RIGHT)){
-//            drawerLayout.closeDrawer(Gravity.RIGHT);
+//    @Override
+//    public void rightBtn() {
+//        if (rightPanelToggle){
+//            closeRightPanel();
+//            rightPanelToggle=false;
 //        }else {
-//            drawerLayout.openDrawer(Gravity.RIGHT);
+//            openRightPanel();
+//            rightPanelToggle=true;
 //        }
-
-    }
-
-    private void openRightPanel(){
-//        rightPanel.animate()
-//                .addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-//                    @Override
-//                    public void onAnimationUpdate(ValueAnimator animation) {
+////        if (drawerLayout.isDrawerOpen(Gravity.RIGHT)){
+////            drawerLayout.closeDrawer(Gravity.RIGHT);
+////        }else {
+////            drawerLayout.openDrawer(Gravity.RIGHT);
+////        }
 //
-//                    }
-//                })
-//                .setInterpolator(new AccelerateDecelerateInterpolator())
-//                .setDuration(400)
-//                .start();
-        if (openAnim!=null){
-            openAnim.start();
-        }
-    }
+//    }
 
-    private void closeRightPanel(){
-//        rightPanel.animate()
-//                .xBy(rightPanel.getWidth())
-//                .setInterpolator(new AccelerateDecelerateInterpolator())
-//                .setDuration(400)
-//                .start();
-        if (openAnim!=null){
-            openAnim.reverse();
-        }
-    }
+//    private void openRightPanel(){
+////        rightPanel.animate()
+////                .addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+////                    @Override
+////                    public void onAnimationUpdate(ValueAnimator animation) {
+////
+////                    }
+////                })
+////                .setInterpolator(new AccelerateDecelerateInterpolator())
+////                .setDuration(400)
+////                .start();
+//        if (openAnim!=null){
+//            openAnim.start();
+//        }
+//    }
+//
+//    private void closeRightPanel(){
+////        rightPanel.animate()
+////                .xBy(rightPanel.getWidth())
+////                .setInterpolator(new AccelerateDecelerateInterpolator())
+////                .setDuration(400)
+////                .start();
+//        if (openAnim!=null){
+//            openAnim.reverse();
+//        }
+//    }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
@@ -518,6 +523,9 @@ public class NetworkVideoView extends FrameLayout implements
             initMediaPlayer();
             try {
                 setPlayUrl(url);
+//                if (getCurrentPosition()!=-1){
+//                    play();
+//                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -553,6 +561,9 @@ public class NetworkVideoView extends FrameLayout implements
     @Override
     public void onCompletion(MediaPlayer mp) {
         controller.showController();
+        if (onCompleteListener!=null){
+            onCompleteListener.onComplete();
+        }
     }
 
     @Override
@@ -616,6 +627,8 @@ public class NetworkVideoView extends FrameLayout implements
             mMediaPlayer.reset();
             mMediaPlayer.release();
             mMediaPlayer=null;
+            hasPrepared=false;
+            setUrl=false;
         }
     }
 
@@ -631,6 +644,10 @@ public class NetworkVideoView extends FrameLayout implements
         return false;
     }
 
+    public void destroy(){
+        controller.onDestroy();
+    }
+
     public interface onTouchUpListener{
         void onTouchUp();
     }
@@ -643,6 +660,16 @@ public class NetworkVideoView extends FrameLayout implements
         void onPlay();
 
         void onPause();
+    }
+
+    public interface onCompleteListener{
+        void onComplete();
+    }
+
+    private onCompleteListener onCompleteListener;
+
+    public void setOnCompleteListener(NetworkVideoView.onCompleteListener onCompleteListener) {
+        this.onCompleteListener = onCompleteListener;
     }
 
     private onPlayPauseListener onPlayPauseListener;

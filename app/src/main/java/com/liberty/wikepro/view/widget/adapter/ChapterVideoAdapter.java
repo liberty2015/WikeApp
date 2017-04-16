@@ -3,6 +3,7 @@ package com.liberty.wikepro.view.widget.adapter;
 import android.content.Context;
 import android.util.Log;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.liberty.libertylibrary.adapter.base.BaseHolder;
 import com.liberty.libertylibrary.adapter.base.BaseRecyclerAdapter;
@@ -42,6 +43,7 @@ public class ChapterVideoAdapter extends BaseRecyclerAdapter<itemType> {
                         }else if (adapterPosition==(ChapterVideoAdapter.this.getDataList().size()-1)){
                             listPoint.setFooter(true);
                         }
+                        ((TextView)getView(R.id.chapter_name)).setText(item.getChname());
                     }
                 };
             }
@@ -50,9 +52,11 @@ public class ChapterVideoAdapter extends BaseRecyclerAdapter<itemType> {
                     @Override
                     public void setData(CVideo item) {
                         super.setData(item);
-                        int adapterPosition = this.getAdapterPosition();
-                        int layoutPosition = this.getLayoutPosition();
-                        Log.d("xxxxxxx","Video  adapterPosition="+adapterPosition+"  layoutPosition="+layoutPosition);
+                        ((TextView)getView(R.id.video_name)).setText(item.getVname());
+//                        int adapterPosition = this.getAdapterPosition();
+//                        int layoutPosition = this.getLayoutPosition();
+//                        Log.d("xxxxxxx","Video  adapterPosition="+adapterPosition+"  layoutPosition="+layoutPosition);
+
                     }
                 };
             }

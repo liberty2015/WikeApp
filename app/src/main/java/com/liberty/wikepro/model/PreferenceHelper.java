@@ -27,4 +27,6 @@ public interface PreferenceHelper {
     double getFloat(String key, float defValue);
 
     String getString(String key, String defValue);
+
+    void clear();
 }

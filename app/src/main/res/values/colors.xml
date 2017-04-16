@@ -7,4 +7,5 @@
     <color name="lineColor">#dadde1</color>
     <color name="tintColor">#a9b3bd</color>
     <color name="lightGray">#d9dee3</color>
+    <color name="backGray">#50454545</color>
 </resources>

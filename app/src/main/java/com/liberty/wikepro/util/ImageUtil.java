@@ -9,6 +9,8 @@ import android.graphics.Shader;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.liberty.wikepro.view.widget.GlideCircleTransform;
 
 /**
@@ -34,5 +36,29 @@ public class ImageUtil {
         int radius=(Math.min(source.getWidth(),source.getHeight()))/2;
         canvas.drawCircle(cx,cy,radius,paint);
         return dst;
+    }
+
+    public static Bitmap getCircleBitmap(Context context,String url){
+        BitmapTarget target=new BitmapTarget();
+        Glide.with(context)
+                .load(url)
+                .asBitmap()
+//                .transform(new GlideCircleTransform(context))
+                .into(target);
+        return target.getBitmap();
+    }
+
+    static class BitmapTarget extends SimpleTarget<Bitmap>{
+
+        Bitmap bitmap;
+
+        @Override
+        public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
+            this.bitmap=bitmap;
+        }
+
+        public Bitmap getBitmap() {
+            return bitmap;
+        }
     }
 }

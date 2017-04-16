@@ -21,7 +21,7 @@ public class LoginModel implements LoginM {
         params.add("loginName",student.getPhone());
         params.add("loginPassword",student.getPassword());
         params.add("gender",Integer.toString(student.getGender()));
-        params.add("nickName",student.getNickName());
+        params.add("nickName",student.getNickname());
         params.add("self_describe",student.getSelf_describe());
         params.add("head_img",student.getHead_img());
         params.add("page_img",student.getPage_img());
@@ -30,8 +30,19 @@ public class LoginModel implements LoginM {
     }
 
     @Override
-    public void login(String userName, String password,OkHttpUtil.OkHttpResponseIMPL impl) {
+    public void loginByPhone(String userName, String password,OkHttpUtil.OkHttpResponseIMPL impl) {
+        OkHttpUtil.RequestParams params=new OkHttpUtil.RequestParams();
+        params.add("loginName",userName);
+        params.add("loginPassword",password);
+        OkHttpUtil.getInstance().post(WikeApi.getInstance().loginByPhone(),params,impl);
+    }
 
+    @Override
+    public void loginByEmail(String userName, String password, OkHttpUtil.OkHttpResponseIMPL impl) {
+        OkHttpUtil.RequestParams params=new OkHttpUtil.RequestParams();
+        params.add("loginName",userName);
+        params.add("loginPassword",password);
+        OkHttpUtil.getInstance().post(WikeApi.getInstance().loginByEmail(),params,impl);
     }
 
     @Override
@@ -40,7 +51,7 @@ public class LoginModel implements LoginM {
         params.add("loginName",student.getEmail());
         params.add("loginPassword",student.getPassword());
         params.add("gender",Integer.toString(student.getGender()));
-        params.add("nickName",student.getNickName());
+        params.add("nickName",student.getNickname());
         params.add("self_describe",student.getSelf_describe());
         params.add("head_img",student.getHead_img());
         params.add("page_img",student.getPage_img());

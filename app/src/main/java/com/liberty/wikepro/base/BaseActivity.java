@@ -167,6 +167,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         startActivity(new Intent(this,activity));
     }
 
+    public void startOtherActivity(Class activity,Bundle data){
+        Intent intent=new Intent(this,activity);
+        intent.putExtras(data);
+        startActivity(intent);
+    }
+
     public View f(@IdRes int id){
         return findViewById(id);
     }

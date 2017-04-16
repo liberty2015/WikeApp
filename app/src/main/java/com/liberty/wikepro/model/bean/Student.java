@@ -10,7 +10,7 @@ import android.os.Parcelable;
 public class Student extends BaseBean {
     private int id;
     private int gender;
-    private String nickName;
+    private String nickname;
     private String name;
     private String password;
     private String phone;
@@ -48,12 +48,12 @@ public class Student extends BaseBean {
         return gender;
     }
 
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
-    public String getNickName() {
-        return nickName;
+    public String getNickname() {
+        return nickname;
     }
 
     public void setPassword(String password) {
@@ -104,10 +104,18 @@ public class Student extends BaseBean {
         return page_img;
     }
 
+    public String getJob() {
+        return job;
+    }
+
+    public void setJob(String job) {
+        this.job = job;
+    }
+
     private Student(Parcel in){
         id=in.readInt();
         gender=in.readInt();
-        nickName=in.readString();
+        nickname=in.readString();
         name=in.readString();
         password=in.readString();
         phone=in.readString();
@@ -127,7 +135,7 @@ public class Student extends BaseBean {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
         dest.writeInt(gender);
-        dest.writeString(nickName);
+        dest.writeString(nickname);
         dest.writeString(name);
         dest.writeString(password);
         dest.writeString(phone);
