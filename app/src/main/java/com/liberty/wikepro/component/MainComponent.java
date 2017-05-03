@@ -2,6 +2,7 @@ package com.liberty.wikepro.component;
 
 import com.liberty.wikepro.view.activity.HistoryActivity;
 import com.liberty.wikepro.view.activity.MyCourseActivity;
+import com.liberty.wikepro.view.activity.SearchActivity;
 import com.liberty.wikepro.view.fragment.HomePageFragment;
 import com.liberty.wikepro.view.fragment.KindFragment;
 import com.liberty.wikepro.view.fragment.MineFragment;
@@ -24,4 +25,6 @@ public interface MainComponent {
     void inject(MyCourseActivity myCourseActivity);
 
     void inject(HistoryActivity historyActivity);
+
+    void inject(SearchActivity searchActivity);
 }

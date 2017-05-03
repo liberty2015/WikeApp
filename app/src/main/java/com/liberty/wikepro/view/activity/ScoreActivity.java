@@ -17,7 +17,6 @@ import com.liberty.wikepro.contact.ScoreContact;
 import com.liberty.wikepro.model.bean.Chapter;
 import com.liberty.wikepro.model.bean.Course;
 import com.liberty.wikepro.model.bean.Score;
-import com.liberty.wikepro.net.WikeApi;
 import com.liberty.wikepro.presenter.ScorePresenter;
 import com.liberty.wikepro.util.ImageUtil;
 import com.liberty.wikepro.view.widget.adapter.ScoreAdapter;
@@ -67,7 +66,7 @@ public class ScoreActivity extends BaseRVActivity<ScorePresenter,Chapter> implem
     protected void initData() {
         score=getIntent().getParcelableExtra("score");
         course=getIntent().getParcelableExtra("course");
-        ImageUtil.getCircleImageIntoImageView(this,headerImg, WikeApi.getInstance().getImageUrl(WikeApplication.getInstance().getStudent().getHead_img()),true);
+        ImageUtil.getCircleImageIntoImageView(this,headerImg, WikeApplication.getInstance().getStudent().getHead_img(),true);
         initAdapter(new ScoreAdapter(this), new OnRecyclerItemClickListener(list) {
             @Override
             public void onItemClick(int position, RecyclerView.ViewHolder holder) {

@@ -40,7 +40,6 @@ import com.liberty.wikepro.component.DaggerPersonComponent;
 import com.liberty.wikepro.contact.PersonContact;
 import com.liberty.wikepro.model.AppPreferenceHelper;
 import com.liberty.wikepro.model.bean.Student;
-import com.liberty.wikepro.net.WikeApi;
 import com.liberty.wikepro.presenter.PersonPresenter;
 import com.liberty.wikepro.util.DialogBoxUtil;
 import com.liberty.wikepro.util.ImageUtil;
@@ -418,7 +417,7 @@ public class PersonActivity extends BaseActivity implements PersonContact.View{
         headerImg = (ImageView) info_header.findViewById(R.id.userImg);
         if (!TextUtils.isEmpty(student.getHead_img())){
             ImageUtil.getCircleImageIntoImageView(this,
-                headerImg, WikeApi.getInstance().getImageUrl(student.getHead_img()),true);
+                headerImg, student.getHead_img(),true);
         }else {
             if (student.getGender()==1){
                 headerImg.setImageResource(R.drawable.ic_male);
@@ -634,7 +633,7 @@ public class PersonActivity extends BaseActivity implements PersonContact.View{
 
     @Override
     public void editUserHeadSuccess() {
-        AppPreferenceHelper.getInstance(this,LoginPre).putString("head_img",student.getHead_img());
+        AppPreferenceHelper.getInstance(this,LoginPre).putString("head_img",WikeApplication.getInstance().getStudent().getHead_img());
         ToastHelper.showToast(this,"上传成功！");
     }
 

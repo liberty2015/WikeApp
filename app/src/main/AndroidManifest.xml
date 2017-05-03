@@ -19,43 +19,61 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:screenOrientation="portrait"
             android:name=".MainActivity"
             android:windowSoftInputMode="adjustPan|stateHidden"
             android:launchMode="singleTop">
 
         </activity>
         <activity
+            android:screenOrientation="portrait"
             android:name=".view.activity.LoginActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:windowSoftInputMode="stateHidden|adjustPan">
+            android:windowSoftInputMode="stateHidden|adjustPan|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.activity.CourseVideoActivity"
+        <activity
+            android:name=".view.activity.CourseVideoActivity"
             android:configChanges="orientation|screenSize|keyboardHidden">
 
         </activity>
-        <activity android:name=".view.activity.PersonActivity">
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".view.activity.PersonActivity">
         </activity>
-        <activity android:name=".view.activity.HistoryActivity">
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".view.activity.HistoryActivity">
         </activity>
         <activity android:name=".view.activity.CourseDetailActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/TranslucentTheme"
             >
 
         </activity>
-        <activity android:name=".view.activity.AboutActivity"/>
-        <activity android:name=".view.activity.RecommendActivity">
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".view.activity.AboutActivity"/>
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".view.activity.RecommendActivity">
 
         </activity>
-        <activity android:name=".view.activity.CatagoryActivity">
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".view.activity.CatagoryActivity">
         </activity>
-        <activity android:name=".view.activity.MyCourseActivity">
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".view.activity.MyCourseActivity">
         </activity>
-        <activity android:name=".view.activity.WebViewActivity" >
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".view.activity.WebViewActivity" >
             <intent-filter>
                 <action android:name="com.liberty.wikepro.VIEW"/>
                 <action android:name="android.intent.action.VIEW"/>
@@ -63,9 +81,13 @@
                 <data android:scheme="wikeApp" android:host="wikeHost"/>
             </intent-filter>
         </activity>
-        <activity android:name=".view.activity.ScoreActivity">
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".view.activity.ScoreActivity">
         </activity>
-        <activity android:name=".view.activity.SearchActivity"
+        <activity
+            android:name=".view.activity.SearchActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTop"
             android:theme="@style/SearchTheme"
             android:windowSoftInputMode="adjustPan|stateHidden">
@@ -83,6 +105,12 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths"/>
         </provider>
+        <meta-data android:name="com.liberty.wikepro.util.OkHttpGlideModule"
+            android:value="GlideModule"/>
+        <!--<provider-->
+            <!--android:authorities="com.liberty.wikepro.SearchRecentProvider"-->
+            <!--android:name=".provider.SearchRecentProvider">-->
+        <!--</provider>-->
     </application>
 
 </manifest>

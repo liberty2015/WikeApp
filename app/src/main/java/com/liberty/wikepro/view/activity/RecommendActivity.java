@@ -14,6 +14,7 @@ import com.liberty.libertylibrary.adapter.base.OnRecyclerItemClickListener;
 import com.liberty.libertylibrary.widget.ErrorEmptyLayout;
 import com.liberty.wikepro.MainActivity;
 import com.liberty.wikepro.R;
+import com.liberty.wikepro.WikeApplication;
 import com.liberty.wikepro.base.BaseRVActivity;
 import com.liberty.wikepro.component.ApplicationComponent;
 import com.liberty.wikepro.component.DaggerLoginComponent;
@@ -49,6 +50,7 @@ public class RecommendActivity extends BaseRVActivity<RecommendContact.Presenter
     @Override
     protected void initData() {
         recommendPresenter.attachView(this);
+        WikeApplication.getInstance().initStudent();
         final RecommendAdapter adapter=new RecommendAdapter(this);
         GridLayoutManager gridLayoutManager=new GridLayoutManager(this,3);
         gridLayoutManager.setSpanSizeLookup(adapter.obtainGridHeaderSpan(3));
@@ -77,9 +79,8 @@ public class RecommendActivity extends BaseRVActivity<RecommendContact.Presenter
                     @Override
                     public void onClick(View v) {
                         RecommendActivity.this.showDialog();
-                        recommendPresenter.sendRecommendTypes(1,adapter.getTypes());
-                        finish();
-                        startOtherActivity(MainActivity.class);
+                        recommendPresenter.sendRecommendTypes(WikeApplication.getInstance().getStudent().getId(),adapter.getTypes());
+
                     }
                 });
             }
@@ -124,7 +125,9 @@ public class RecommendActivity extends BaseRVActivity<RecommendContact.Presenter
 
     @Override
     public void recommendSuccess() {
-
+        dismissDialog();
+        finish();
+        startOtherActivity(MainActivity.class);
     }
 
     @Override

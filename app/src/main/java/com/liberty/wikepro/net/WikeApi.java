@@ -70,6 +70,8 @@ public class WikeApi {
 
     private static final String particularScore_url="/Home/Course/particularScore";
 
+    private static final String search_url="/Home/Search/search";
+
     public static WikeApi getInstance(){
         if (instance==null){
             instance=new WikeApi();
@@ -184,5 +186,9 @@ public class WikeApi {
 
     public String particularScore(){
         return base_url+(hasPort?port:"")+particularScore_url;
+    }
+
+    public String search(){
+        return base_url+(hasPort?port:"")+search_url;
     }
 }

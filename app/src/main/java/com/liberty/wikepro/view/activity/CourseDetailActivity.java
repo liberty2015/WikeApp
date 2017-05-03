@@ -28,7 +28,6 @@ import com.liberty.wikepro.model.bean.Chapter;
 import com.liberty.wikepro.model.bean.Course;
 import com.liberty.wikepro.model.bean.User;
 import com.liberty.wikepro.model.bean.itemType;
-import com.liberty.wikepro.net.WikeApi;
 import com.liberty.wikepro.presenter.CourseDetailPresenter;
 import com.liberty.wikepro.util.ImageUtil;
 import com.liberty.wikepro.util.StatusBarCompat;
@@ -147,7 +146,7 @@ public class CourseDetailActivity extends BaseRVActivity<CourseContact.Presenter
                 detailPresenter.firstCourse(course.getId(), WikeApplication.getInstance().getStudent().getId());
             }
         });
-        ImageUtil.getCircleImageIntoImageView(this,(ImageView) findViewById(R.id.cover),WikeApi.getInstance().getImageUrl(course.getPdev()),false);
+        ImageUtil.getCircleImageIntoImageView(this,(ImageView) findViewById(R.id.cover),course.getPdev(),false);
         if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
             collapsingToolbarLayout.setTransitionGroup(false);
             getWindow().setSharedElementEnterTransition(

@@ -1,7 +1,6 @@
 package com.liberty.wikepro.view.widget.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -11,7 +10,6 @@ import com.liberty.wikepro.R;
 import com.liberty.wikepro.model.bean.Type;
 import com.liberty.wikepro.model.bean.direction;
 import com.liberty.wikepro.model.bean.itemType;
-import com.liberty.wikepro.net.WikeApi;
 import com.liberty.wikepro.util.ImageUtil;
 import com.liberty.wikepro.view.widget.RecommendView;
 
@@ -72,7 +70,7 @@ public class RecommendAdapter extends BaseRecyclerAdapter<itemType> {
                             }
                         });
                         ImageUtil.getCircleImageIntoImageView(getmContext(),recommendView.getKindImg(),
-                                WikeApi.getInstance().getImageUrl(item.getTdev()),true);
+                                item.getTdev(),true);
                         TextView kindName=getView(R.id.kind_name);
                         kindName.setText(item.getName());
                     }
@@ -104,7 +102,7 @@ public class RecommendAdapter extends BaseRecyclerAdapter<itemType> {
         @Override
         public int getSpanSize(int position) {
             int count= super.getSpanSize(position);
-            Log.d("xxxxxxx","count="+count+"position="+position);
+//            Log.d("xxxxxxx","count="+count+"position="+position);
             if (count==1){
                 int size=getHeaderCount();
                 itemType type=getItem(size>0?position-size:position);

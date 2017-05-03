@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <searchable xmlns:android="http://schemas.android.com/apk/res/android"
     android:label="@string/app_name"
-    android:hint="输入您想查找的课程">
+    android:hint="输入您想查找的课程"
+    android:searchSuggestAuthority="com.liberty.wikepro.SearchRecentProvider"
+    android:searchSuggestSelection=" ?">
 
 </searchable>

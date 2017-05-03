@@ -12,7 +12,6 @@ import com.liberty.wikepro.R;
 import com.liberty.wikepro.model.bean.Catalog;
 import com.liberty.wikepro.model.bean.Course;
 import com.liberty.wikepro.model.bean.itemType;
-import com.liberty.wikepro.net.WikeApi;
 import com.liberty.wikepro.util.ImageUtil;
 
 /**
@@ -39,7 +38,7 @@ public class HomePageAdapter extends BaseRecyclerAdapter<itemType> {
                         super.setData(item);
                         ImageUtil.getCircleImageIntoImageView(getmContext(),
                                 (ImageView) getView(R.id.courseCover),
-                                WikeApi.getInstance().getImageUrl(item.getPdev()),false);
+                                item.getPdev(),false);
                         ((TextView)getView(R.id.courseTitle)).setText(item.getCname());
                         ((TextView)getView(R.id.stu_num)).setText(item.getUnum()+"人学习");
                     }
@@ -53,8 +52,9 @@ public class HomePageAdapter extends BaseRecyclerAdapter<itemType> {
 //                        NestFullListView listView=getView(R.id.listView);
 //                        listView.setAdpter(new HomePageNestAdapter(getmContext(),item.getCourses()));
                         ImageView coverImg=getView(R.id.cover);
+                        Log.d("xxxxx","pdev="+item.getPdev());
                         ImageUtil.getCircleImageIntoImageView(getmContext(),coverImg,
-                                WikeApi.getInstance().getImageUrl(item.getPdev()),false);
+                                item.getPdev(),false);
                         ((TextView)getView(R.id.courseTitle)).setText(item.getCname());
                         ((TextView)getView(R.id.courseDescription)).setText(item.getDescribtion());
                         ((TextView)getView(R.id.courseCount)).setText(item.getUnum()+"人学习");
@@ -105,7 +105,7 @@ public class HomePageAdapter extends BaseRecyclerAdapter<itemType> {
         @Override
         public int getSpanSize(int position) {
             int count= super.getSpanSize(position);
-            Log.d("xxxxxxx","count="+count+"position="+position);
+//            Log.d("xxxxxxx","count="+count+"position="+position);
             if (count==1){
                 int size=getHeaderCount();
                 itemType type=getItem(size>0?position-size:position);

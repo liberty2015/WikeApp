@@ -33,6 +33,8 @@
 
     <style name="TranslucentTheme" parent="BaseTheme">
         <!--<item name="android:windowContentTransitions"></item>-->
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
     </style>
     <style name="SearchTheme" parent="BaseTheme">
         <item name="android:windowBackground">@color/backGray</item>

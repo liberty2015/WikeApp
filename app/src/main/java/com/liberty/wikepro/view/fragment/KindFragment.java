@@ -28,7 +28,6 @@ public class KindFragment extends BaseRVFragment<KindContact.Presenter,itemType>
     @Inject
     KindPresenter kindPresenter;
 
-
     @Override
     protected int getLayoutResId() {
         return R.layout.common_list_fragment_layout;

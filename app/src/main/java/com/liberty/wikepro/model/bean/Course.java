@@ -22,11 +22,21 @@ public class Course extends BaseBean implements itemType{
     private int homeType;
     private int hasStudy;
 
+    private SearchElement searchElement;
+
     public static final int RECOMMAND=0x11;
     public static final int NEW=0x12;
 
     public Course(){
 
+    }
+
+    public SearchElement getSearchElement() {
+        return searchElement;
+    }
+
+    public void setSearchElement(SearchElement searchElement) {
+        this.searchElement = searchElement;
     }
 
     private Course(Parcel in){

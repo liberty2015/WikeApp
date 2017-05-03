@@ -1,5 +1,6 @@
 package com.liberty.wikepro.presenter;
 
+import com.liberty.wikepro.WikeApplication;
 import com.liberty.wikepro.base.BasePresenter;
 import com.liberty.wikepro.contact.PersonContact;
 import com.liberty.wikepro.model.PersonModel;
@@ -128,7 +129,7 @@ public class PersonPresenter extends BasePresenter<PersonContact.View> implement
                 try {
                     JSONObject object=new JSONObject(result);
                     if (object.isNull("dev")){
-                        student.setHead_img(object.getString("dev"));
+                        WikeApplication.getInstance().getStudent().setHead_img(object.getString("dev"));
                     }
                     mView.editUserHeadSuccess();
                 } catch (JSONException e) {

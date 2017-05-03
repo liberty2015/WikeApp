@@ -36,7 +36,6 @@ import com.liberty.wikepro.component.DaggerMainComponent;
 import com.liberty.wikepro.contact.MineContact;
 import com.liberty.wikepro.model.AppPreferenceHelper;
 import com.liberty.wikepro.model.bean.Student;
-import com.liberty.wikepro.net.WikeApi;
 import com.liberty.wikepro.presenter.MinePresenter;
 import com.liberty.wikepro.util.DialogBoxUtil;
 import com.liberty.wikepro.util.GlideCacheUtil;
@@ -327,7 +326,7 @@ public class MineFragment extends BaseFragment implements MineContact.View{
         if (student!=null){
             if (!TextUtils.isEmpty(student.getHead_img())){
                 ImageUtil.getCircleImageIntoImageView(getHoldActivity(),
-                headerImg, WikeApi.getInstance().getImageUrl(student.getHead_img()),true);
+                headerImg, student.getHead_img(),true);
             }else {
                 if (student.getGender()==1){
                     headerImg.setImageResource(R.drawable.ic_male);
@@ -349,7 +348,7 @@ public class MineFragment extends BaseFragment implements MineContact.View{
                 ((TextView)mineHeader.findViewById(R.id.userDescription)).setText(student.getSelf_describe());
             }
             if (!TextUtils.isEmpty(student.getPage_img())){
-                ImageUtil.getCircleImageIntoImageView(getHoldActivity(),(ImageView) mineHeader.findViewById(R.id.user_cover),WikeApi.getInstance().getImageUrl(student.getPage_img()),false);
+                ImageUtil.getCircleImageIntoImageView(getHoldActivity(),(ImageView) mineHeader.findViewById(R.id.user_cover),student.getPage_img(),false);
             }
         }
 

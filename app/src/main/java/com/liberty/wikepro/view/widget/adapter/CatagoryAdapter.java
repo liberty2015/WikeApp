@@ -9,7 +9,6 @@ import com.liberty.libertylibrary.adapter.base.BaseHolder;
 import com.liberty.libertylibrary.adapter.base.BaseRecyclerAdapter;
 import com.liberty.wikepro.R;
 import com.liberty.wikepro.model.bean.Course;
-import com.liberty.wikepro.net.WikeApi;
 import com.liberty.wikepro.util.ImageUtil;
 
 /**
@@ -31,7 +30,7 @@ public class CatagoryAdapter extends BaseRecyclerAdapter<Course> {
                 super.setData(item);
                 ImageView coverImg=getView(R.id.cover);
                 ImageUtil.getCircleImageIntoImageView(getmContext(),coverImg,
-                        WikeApi.getInstance().getImageUrl(item.getPdev()),false);
+                        item.getPdev(),false);
                 ((TextView)getView(R.id.courseTitle)).setText(item.getCname());
                 ((TextView)getView(R.id.courseDescription)).setText(item.getDescribtion());
                 ((TextView)getView(R.id.courseCount)).setText(item.getUnum()+"人学习");

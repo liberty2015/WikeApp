@@ -4,17 +4,16 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.liberty.libertylibrary.widget.Banner;
 import com.liberty.wikepro.R;
 import com.liberty.wikepro.base.BasePresenter;
 import com.liberty.wikepro.contact.HomeContact;
 import com.liberty.wikepro.model.HomeModel;
-import com.liberty.libertylibrary.widget.Banner;
 import com.liberty.wikepro.model.bean.Catalog;
 import com.liberty.wikepro.model.bean.Course;
 import com.liberty.wikepro.model.bean.Student;
 import com.liberty.wikepro.model.bean.itemType;
 import com.liberty.wikepro.net.OkHttpUtil;
-import com.liberty.wikepro.net.WikeApi;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -63,7 +62,7 @@ public class HomePresenter extends BasePresenter<HomeContact.View> implements Ho
                         Banner.photos photo=new Banner.photos();
                         photo.setName(object.isNull("title")?"":object.getString("title"));
                         photo.setContentUrl(object.isNull("url")?"":object.getString("url"));
-                        photo.setPhotoUrl(object.isNull("img_dev")?"": WikeApi.getInstance().getImageUrl(object.getString("img_dev")));
+                        photo.setPhotoUrl(object.isNull("img_dev")?"": object.getString("img_dev"));
                         photos.add(photo);
                     }
                     banner.setPhotos(photos);

@@ -12,7 +12,6 @@ import com.liberty.wikepro.R;
 import com.liberty.wikepro.model.bean.Type;
 import com.liberty.wikepro.model.bean.direction;
 import com.liberty.wikepro.model.bean.itemType;
-import com.liberty.wikepro.net.WikeApi;
 import com.liberty.wikepro.util.ImageUtil;
 
 /**
@@ -59,7 +58,7 @@ public class KindAdapter extends BaseRecyclerAdapter<itemType> {
                         super.setData(item);
                         ImageView kindImg=getView(R.id.kind_img);
                         ImageUtil.getCircleImageIntoImageView(getmContext(),
-                                kindImg, WikeApi.getInstance().getImageUrl(item.getTdev()),false);
+                                kindImg, item.getTdev(),false);
                         TextView kindName=getView(R.id.kind_name);
                         kindName.setText(item.getName());
                     }
@@ -91,7 +90,7 @@ public class KindAdapter extends BaseRecyclerAdapter<itemType> {
         @Override
         public int getSpanSize(int position) {
             int count= super.getSpanSize(position);
-            Log.d("xxxxxxx","count="+count+"position="+position);
+//            Log.d("xxxxxxx","count="+count+"position="+position);
             if (count==1){
                 int size=getHeaderCount();
                 itemType type=getItem(size>0?position-size:position);

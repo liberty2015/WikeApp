@@ -440,6 +440,7 @@ public class LoginActivity extends BaseActivity implements LoginContact.View{
                 .putString("head_img",student.getHead_img())
                 .putString("page_img",student.getPage_img())
                 .putString("job",student.getJob());
+        dismissDialog();
         finish();
         startOtherActivity(MainActivity.class);
     }
@@ -465,6 +466,7 @@ public class LoginActivity extends BaseActivity implements LoginContact.View{
                 .putString("head_img",student.getHead_img())
                 .putString("page_img",student.getPage_img())
                 .putString("job",student.getJob());
+        dismissDialog();
         finish();
         startOtherActivity(RecommendActivity.class);
     }

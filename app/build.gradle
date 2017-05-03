@@ -20,17 +20,18 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField "String","serverUrl",'"http://119.29.175.247"'
-            buildConfigField "String","appUrl",'"/WikeServer"'
+            buildConfigField "String", "serverUrl", '"http://119.29.175.247"'
+            buildConfigField "String", "appUrl", '"/WikeServer"'
         }
-        debug{
+        debug {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'),'proguard-rules.pro'
-            buildConfigField "String","serverUrl",'"http://119.29.175.247"'
-            buildConfigField "String","appUrl",'"/WikeServer"'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "serverUrl", '"http://119.29.175.247"'
+            buildConfigField "String", "appUrl", '"/WikeServer"'
         }
     }
 
+    sourceSets { main { assets.srcDirs = ['src/main/assets', 'src/main/assets/'] } }
 }
 
 dependencies {
@@ -45,6 +46,7 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.6.0'
     compile 'com.squareup.okhttp3:logging-interceptor:3.1.2'
     compile 'com.squareup.okhttp3:okhttp-urlconnection:3.2.0'
+    compile 'com.github.bumptech.glide:okhttp3-integration:1.4.0@aar'
     compile 'com.jakewharton:butterknife:8.4.0'
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.google.dagger:dagger:2.0.2'

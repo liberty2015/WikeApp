@@ -10,6 +10,9 @@ import com.liberty.wikepro.module.ApplicationModule;
 import com.liberty.wikepro.util.NetStateReceiver;
 import com.liberty.wikepro.view.activity.LoginActivity;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 /**
  * Created by LinJinFeng on 2017/2/16.
  */
@@ -29,6 +32,13 @@ public class WikeApplication extends Application {
                 .applicationModule(new ApplicationModule(instance))
                 .build();
         NetStateReceiver.registerNetworkStateReceiver(instance);
+        InputStream stream=null;
+        try {
+            stream = getAssets().open("secrity.cer");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+//        Glide.get(this).register(GlideUrl.class, InputStream.class, new OkHttpUrlLoader.Factory(HttpsUtils.getOkHttpClient(stream)));
     }
 
     public void initStudent(){

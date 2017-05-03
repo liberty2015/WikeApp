@@ -111,7 +111,7 @@ public class RecommendPresenter extends BasePresenter<RecommendContact.View> imp
 
             @Override
             public void onAnalyseDataSuccess(String result) {
-
+                mView.recommendSuccess();
             }
 
             @Override

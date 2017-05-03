@@ -73,6 +73,7 @@ public class HomePageFragment extends BaseRVFragment<HomeContact.Presenter,itemT
                     if (course.getSpanCount()==2){
                         if (course.getHasStudy()==0){
                             ImageView cover= (ImageView) ((BaseHolder)holder).getView(R.id.cover);
+//                            cover.getLocationOnScreen();
                             Intent intent=new Intent(getHoldActivity(), CourseDetailActivity.class);
                             Bundle option = ActivityOptionsCompat.makeSceneTransitionAnimation(getHoldActivity(), cover, "shared_img").toBundle();
                             intent.putExtra("course",course);
