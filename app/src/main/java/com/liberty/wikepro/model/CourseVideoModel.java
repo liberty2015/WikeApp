@@ -87,7 +87,7 @@ public class CourseVideoModel implements CourseVideoM {
     }
 
     @Override
-    public void addHistory(Course course, Chapter chapter, CVideo cVideo, int stu_id) {
+    public void addHistory(Course course, Chapter chapter, CVideo cVideo, int stu_id){
         history history=new history();
         history.setCourse_id(course.getId());
         history.setCourse(course.getCname());

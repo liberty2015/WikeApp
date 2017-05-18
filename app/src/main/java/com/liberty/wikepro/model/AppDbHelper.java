@@ -23,7 +23,7 @@ import java.util.TimeZone;
 
 public class AppDbHelper{
 
-    private static AppDbHelper instance;
+    private volatile static AppDbHelper instance;
 
     private SQLiteHelper helper;
 
